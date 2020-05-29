@@ -82,23 +82,24 @@ public class Application {
     }
 
     private Predicate<Entry<String, List<List<String>>>> getEntryPredicate(String jobName, LocalDate from, LocalDate to) {
-        Predicate<Entry<String, List<List<String>>>> predicate;
         if (from == null && to == null) {
-            predicate = entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName));
-        } else if (jobName == null && to == null) {
-            predicate = entry -> entry.getValue().stream().anyMatch(job ->
-                    !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        } else if (jobName == null && from == null) {
-            predicate = entry -> entry.getValue().stream().anyMatch(job ->
-                    !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        } else if (jobName == null) {
-            predicate = entry -> entry.getValue().stream().anyMatch(job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        } else if (to != null) {
-            predicate = entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        } else {
-            predicate = entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName) && !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            return entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName));
         }
-        return predicate;
+        if (jobName == null && to == null) {
+            return entry -> entry.getValue().stream().anyMatch(job ->
+                    !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }
+        if (jobName == null && from == null) {
+            return entry -> entry.getValue().stream().anyMatch(job ->
+                    !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }
+        if (jobName == null) {
+            return entry -> entry.getValue().stream().anyMatch(job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }
+        if (to != null) {
+            return entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        }
+        return entry -> entry.getValue().stream().anyMatch(job -> job.get(0).equals(jobName) && !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
     }
 
     public String export(String type, LocalDate date) {
