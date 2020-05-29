@@ -152,7 +152,7 @@ public class ApplicationTest {
         application.execute("publish", employerAlibaba, seniorJavaDevJob, "ATS", null, null, null);
         application.execute("apply", employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerJacky, null, LocalDate.now());
         application.execute("apply", employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerLam, null, LocalDate.now());
-        List<String> applicants = application.findApplicants(seniorJavaDevJob, employerAlibaba);
+        List<String> applicants = application.findApplicants(seniorJavaDevJob, employerAlibaba, null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Lam");
