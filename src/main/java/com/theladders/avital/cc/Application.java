@@ -13,60 +13,62 @@ public class Application {
     private final HashMap<String, List<List<String>>> applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
-    public void execute(String command, String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
-        if (command.equals("publish")) {
-            if (!jobType.equals("JReq") && !jobType.equals("ATS")) {
-                throw new NotSupportedJobTypeException();
-            }
-
-            List<List<String>> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-
-            alreadyPublished.add(new ArrayList<String>() {{
-                add(jobName);
-                add(jobType);
-            }});
-            jobs.put(employerName, alreadyPublished);
-        } else if (command.equals("save")) {
-            List<List<String>> saved = jobs.getOrDefault(employerName, new ArrayList<>());
-
-            saved.add(new ArrayList<String>() {{
-                add(jobName);
-                add(jobType);
-            }});
-            jobs.put(employerName, saved);
-        } else if (command.equals("apply")) {
-            if (jobType.equals("JReq") && resumeApplicantName == null) {
-                List<String> failedApplication = new ArrayList<String>() {{
-                    add(jobName);
-                    add(jobType);
-                    add(applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                    add(employerName);
-                }};
-                failedApplications.add(failedApplication);
-                throw new RequiresResumeForJReqJobException();
-            }
-
-            if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
-                throw new InvalidResumeException();
-            }
-            List<List<String>> saved = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
-
-            saved.add(new ArrayList<String>() {{
+    public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        if (jobType.equals("JReq") && resumeApplicantName == null) {
+            List<String> failedApplication = new ArrayList<String>() {{
                 add(jobName);
                 add(jobType);
                 add(applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 add(employerName);
-            }});
-            applied.put(jobSeekerName, saved);
+            }};
+            failedApplications.add(failedApplication);
+            throw new RequiresResumeForJReqJobException();
         }
+
+        if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
+            throw new InvalidResumeException();
+        }
+        List<List<String>> saved = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
+
+        saved.add(new ArrayList<String>() {{
+            add(jobName);
+            add(jobType);
+            add(applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            add(employerName);
+        }});
+        applied.put(jobSeekerName, saved);
+    }
+
+    public void saveJobSeeker(String jobSeeker, String jobName, String jobType) {
+        List<List<String>> saved = jobs.getOrDefault(jobSeeker, new ArrayList<>());
+
+        saved.add(new ArrayList<String>() {{
+            add(jobName);
+            add(jobType);
+        }});
+        jobs.put(jobSeeker, saved);
+    }
+
+    public void publishJob(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
+        if (!jobType.equals("JReq") && !jobType.equals("ATS")) {
+            throw new NotSupportedJobTypeException();
+        }
+
+        List<List<String>> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+
+        alreadyPublished.add(new ArrayList<String>() {{
+            add(jobName);
+            add(jobType);
+        }});
+        jobs.put(employerName, alreadyPublished);
     }
 
     public List<List<String>> getJobs(String employerName, String type) {
         if (type.equals("applied")) {
             return applied.get(employerName);
+        } else {
+            return jobs.get(employerName);
         }
-
-        return jobs.get(employerName);
     }
 
     public List<String> findApplicants(String jobName, String employerName, LocalDate from) {
