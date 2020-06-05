@@ -17,18 +17,27 @@ public class JobApplications {
     private final HashMap<String, List<JobApplication>> jobApplications = new HashMap<>();
     private final List<JobApplication> failedApplications = new ArrayList<>();
 
-    public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        if (jobType.equals("JReq") && resumeApplicantName == null) {
-            failedApplications.add(new JobApplication(jobName, jobType, applicationTime, employerName));
-            throw new RequiresResumeForJReqJobException();
-        }
-        if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
-            throw new InvalidResumeException();
-        }
+    public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        checkLegal(jobSeekerName, resumeApplicantName, jobApplication);
+        saveApply(jobSeekerName, jobApplication);
+    }
+
+    private void saveApply(String jobSeekerName, JobApplication jobApplication) {
         List<JobApplication> saved = this.jobApplications.getOrDefault(jobSeekerName, new ArrayList<>());
-        saved.add(new JobApplication(jobName, jobType, applicationTime, employerName));
+        saved.add(jobApplication);
         jobApplications.put(jobSeekerName, saved);
     }
+
+    private void checkLegal(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        if (jobApplication.getJobType().equals("JReq") && resumeApplicantName == null) {
+            failedApplications.add(jobApplication);
+            throw new RequiresResumeForJReqJobException();
+        }
+        if (jobApplication.getJobType().equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
+            throw new InvalidResumeException();
+        }
+    }
+
 
     public List<JobApplication> getAppliedJobs(String employerName) {
         return jobApplications.get(employerName);

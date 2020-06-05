@@ -8,8 +8,8 @@ public class Application {
     private final JobSeekers jobSeekers = new JobSeekers();
     private final JobApplications jobApplications = new JobApplications();
 
-    public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobApplications.apply(employerName, jobName, jobType, jobSeekerName, resumeApplicantName, applicationTime);
+    public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
     public void saveJobSeeker(String jobSeeker, String jobName, String jobType) {
