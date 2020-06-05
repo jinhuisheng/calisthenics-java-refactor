@@ -14,33 +14,13 @@ import static org.junit.Assert.assertThat;
 public class ApplicationTest {
     Application application;
 
-    private ArrayList<String> createNewJob(String jobName, String jobType, String employerName, String applicationTime) {
-        return new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-            add(applicationTime);
-            add(employerName);
-        }};
-    }
-
-    private ArrayList<String> createNewJob(final String jobName, final String jobType) {
-        return new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-        }};
-    }
-
-    private Job temp_createNewJob(final String jobName, final String jobType) {
-        return new Job(jobName, jobType);
-    }
-
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         application = new Application();
     }
 
     @Test
-    public void employers_should_be_able_to_publish_a_job() throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
+    public void employers_should_be_able_to_publish_a_job() throws NotSupportedJobTypeException {
         String employerName = "";
         String jobName = "高级前端开发";
         application.publishJob(employerName, jobName, "JReq");
@@ -52,7 +32,7 @@ public class ApplicationTest {
     }
 
     @Test
-    public void employers_should_only_be_able_to_see_jobs_published_by_them() throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
+    public void employers_should_only_be_able_to_see_jobs_published_by_them() throws NotSupportedJobTypeException {
         String employerAlibaba = "Alibaba";
         String employerTencent = "Tencent";
         String seniorJavaDevJob = "高级Java开发";
