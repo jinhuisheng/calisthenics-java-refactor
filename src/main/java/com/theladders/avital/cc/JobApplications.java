@@ -63,15 +63,7 @@ public class JobApplications {
         return entry -> entry.getValue().stream().anyMatch(job -> job.getJobName().equals(jobName) && !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
     }
 
-    public String export(String type, LocalDate date) {
-        if (type.equals("csv")) {
-            return exportCsv(date);
-        } else {
-            return exportHtml(date);
-        }
-    }
-
-    private String exportHtml(LocalDate date) {
+    public String exportHtml(LocalDate date) {
         String content = getHtmlContent(date);
         return exportHtml(content);
     }
@@ -107,7 +99,7 @@ public class JobApplications {
                 + "</html>";
     }
 
-    private String exportCsv(LocalDate date) {
+    public String exportCsv(LocalDate date) {
         String content = getCsvContent(date);
         return exportCsv(content);
     }

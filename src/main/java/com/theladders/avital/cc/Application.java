@@ -17,9 +17,6 @@ public class Application {
     }
 
     public void publishJob(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
-        if (!jobType.equals("JReq") && !jobType.equals("ATS")) {
-            throw new NotSupportedJobTypeException();
-        }
         employers.publishJob(employerName, jobName, jobType);
     }
 
@@ -39,8 +36,12 @@ public class Application {
         return jobApplications.findApplicants(jobName, from, to);
     }
 
-    public String export(String type, LocalDate date) {
-        return jobApplications.export(type, date);
+    public String exportCsv(LocalDate date) {
+        return jobApplications.exportCsv(date);
+    }
+
+    public String exportHtml(LocalDate date) {
+        return jobApplications.exportHtml(date);
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
