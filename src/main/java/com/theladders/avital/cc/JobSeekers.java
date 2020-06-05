@@ -10,11 +10,13 @@ import java.util.List;
  */
 public class JobSeekers {
     private final HashMap<String, List<Job>> jobSeekers = new HashMap<>();
+
     public void saveJobSeeker(String jobSeeker, String jobName, String jobType) {
         List<Job> saved = jobSeekers.getOrDefault(jobSeeker, new ArrayList<>());
-        saved.add(new Job(jobName, jobType));
+        saved.add(new Job(jobName, JobType.valueOf(jobType)));
         jobSeekers.put(jobSeeker, saved);
     }
+
     public List<Job> getJobSeekerJobs(String jobSeeker) {
         return jobSeekers.get(jobSeeker);
     }

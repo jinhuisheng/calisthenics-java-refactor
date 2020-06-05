@@ -16,7 +16,7 @@ public class Application {
         jobSeekers.saveJobSeeker(jobSeeker, jobName, jobType);
     }
 
-    public void publishJob(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
+    public void publishJob(String employerName, String jobName, JobType jobType) throws NotSupportedJobTypeException {
         employers.publishJob(employerName, jobName, jobType);
     }
 

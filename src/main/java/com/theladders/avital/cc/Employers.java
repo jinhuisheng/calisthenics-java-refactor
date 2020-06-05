@@ -11,8 +11,8 @@ import java.util.List;
 public class Employers {
     private final HashMap<String, List<Job>> jobs = new HashMap<>();
 
-    public void publishJob(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
-        if (!jobType.equals("JReq") && !jobType.equals("ATS")) {
+    public void publishJob(String employerName, String jobName, JobType jobType) throws NotSupportedJobTypeException {
+        if (jobType != JobType.JReq && jobType != JobType.ATS) {
             throw new NotSupportedJobTypeException();
         }
         List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
