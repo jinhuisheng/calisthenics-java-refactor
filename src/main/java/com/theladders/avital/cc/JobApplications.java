@@ -38,7 +38,6 @@ public class JobApplications {
         }
     }
 
-
     public List<JobApplication> getAppliedJobs(String employerName) {
         return jobApplications.get(employerName);
     }
@@ -73,59 +72,11 @@ public class JobApplications {
     }
 
     public String exportHtml(LocalDate date) {
-        String content = getHtmlContent(date);
-        return exportHtml(content);
-    }
-
-    private String getHtmlContent(LocalDate date) {
-        return this.jobApplications.entrySet().stream().map(entry ->
-                entry.getValue().stream()
-                        .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> "<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType() + "</td>" + "<td>" + entry.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>")
-                        .collect(Collectors.joining()))
-                .collect(Collectors.joining());
-    }
-
-
-    private String exportHtml(String content) {
-        return "<!DOCTYPE html>"
-                + "<body>"
-                + "<table>"
-                + "<thead>"
-                + "<tr>"
-                + "<th>Employer</th>"
-                + "<th>Job</th>"
-                + "<th>Job Type</th>"
-                + "<th>Applicants</th>"
-                + "<th>Date</th>"
-                + "</tr>"
-                + "</thead>"
-                + "<tbody>"
-                + content
-                + "</tbody>"
-                + "</table>"
-                + "</body>"
-                + "</html>";
+        return Exporter.exportHtml(this.jobApplications, date);
     }
 
     public String exportCsv(LocalDate date) {
-        String content = getCsvContent(date);
-        return exportCsv(content);
-    }
-
-    private String getCsvContent(LocalDate date) {
-        return this.jobApplications.entrySet().stream().map(entry ->
-                entry.getValue().stream()
-                        .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType() + "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
-                        .collect(Collectors.joining()))
-                .collect(Collectors.joining());
-    }
-
-
-    private String exportCsv(String content) {
-        String startStr = "Employer,Job,Job Type,Applicants,Date" + "\n";
-        return startStr + content;
+        return Exporter.exportCsv(this.jobApplications, date);
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
@@ -140,6 +91,5 @@ public class JobApplications {
                         && job.getEmployerName().equals(employerName))
                 .count();
     }
-
 
 }
