@@ -38,8 +38,8 @@ public class JobApplications {
         }
     }
 
-    public List<JobApplication> getAppliedJobs(String employerName) {
-        return jobApplications.get(employerName);
+    public List<JobApplication> getAppliedJobs(String jobSeeker) {
+        return jobApplications.get(jobSeeker);
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {

@@ -10,13 +10,12 @@ import java.time.format.DateTimeFormatter;
  * @date 2020/6/5.
  */
 public class JobApplication {
-    private String jobName;
     private final String applicationTime;
     private final String employerName;
-    private JobType jobType;
+    private final Job job;
 
     public String getJobName() {
-        return jobName;
+        return this.job.getJobName();
     }
 
     public String getApplicationTime() {
@@ -32,30 +31,24 @@ public class JobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobApplication that = (JobApplication) o;
-        return Objects.equal(jobName, that.jobName) &&
+        return Objects.equal(job.getJobName(), that.job.getJobName()) &&
                 Objects.equal(applicationTime, that.applicationTime) &&
                 Objects.equal(employerName, that.employerName) &&
-                jobType == that.jobType;
+                job.getJobType() == that.job.getJobType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(jobName, applicationTime, employerName, jobType);
+        return Objects.hashCode(job.getJobName(), applicationTime, employerName, job.getJobType());
     }
 
-    public JobApplication(String jobName, JobType jobType, LocalDate applicationTime, String employerName) {
-        this(jobName, applicationTime, employerName, jobType);
-    }
-
-
-    public JobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
-        this.jobName = jobName;
+    public JobApplication(String employerName, LocalDate applicationTime, Job job) {
         this.applicationTime = applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.employerName = employerName;
-        this.jobType = jobType;
+        this.job = job;
     }
 
     public JobType getJobType() {
-        return jobType;
+        return this.job.getJobType();
     }
 }

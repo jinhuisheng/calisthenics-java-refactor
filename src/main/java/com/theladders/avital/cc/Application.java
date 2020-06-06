@@ -20,8 +20,8 @@ public class Application {
         employers.publishJob(employerName, jobName, jobType);
     }
 
-    public List<JobApplication> getAppliedJobs(String employerName) {
-        return jobApplications.getAppliedJobs(employerName);
+    public List<JobApplication> getAppliedJobs(String jobSeekerName) {
+        return jobApplications.getAppliedJobs(jobSeekerName);
     }
 
     public List<Job> getJobSeekerJobs(String jobSeeker) {

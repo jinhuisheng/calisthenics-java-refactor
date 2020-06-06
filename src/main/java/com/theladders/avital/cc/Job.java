@@ -29,4 +29,11 @@ public class Job {
         this.jobType = jobType;
     }
 
+    public String getJobName() {
+        return this.jobName;
+    }
+
+    public JobType getJobType() {
+        return this.jobType;
+    }
 }
