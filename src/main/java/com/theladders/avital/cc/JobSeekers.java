@@ -1,6 +1,5 @@
 package com.theladders.avital.cc;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import java.util.List;
  */
 public class JobSeekers {
     private final List<JobSeeker> jobSeekers = new ArrayList<>();
-    private final JobApplications jobApplications = new JobApplications();
 
     public void saveJobSeeker(String jobSeekerName, String jobName, JobType jobType) {
         JobSeeker jobSeeker = getJobSeeker(jobSeekerName);
@@ -33,31 +31,4 @@ public class JobSeekers {
                 .orElseGet(ArrayList::new);
     }
 
-    public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
-    }
-
-    public List<JobApplication> getEmployerAppliedJobs(String employerName) {
-        return jobApplications.getAppliedJobs(employerName);
-    }
-
-    public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        return jobApplications.findApplicants(jobName, from, to);
-    }
-
-    public String exportCsv(LocalDate date) {
-        return jobApplications.exportCsv(date);
-    }
-
-    public String exportHtml(LocalDate date) {
-        return jobApplications.exportHtml(date);
-    }
-
-    public int getSuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getSuccessfulApplications(employerName, jobName);
-    }
-
-    public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getUnsuccessfulApplications(employerName, jobName);
-    }
 }

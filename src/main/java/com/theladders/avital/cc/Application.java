@@ -6,9 +6,10 @@ import java.util.*;
 public class Application {
     private final Employers employers = new Employers();
     private final JobSeekers jobSeekers = new JobSeekers();
+    private final JobApplications jobApplications = new JobApplications();
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobSeekers.apply(jobSeekerName, resumeApplicantName, jobApplication);
+        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
     public void saveJobSeeker(String jobSeeker, String jobName, JobType jobType) {
@@ -20,7 +21,7 @@ public class Application {
     }
 
     public List<JobApplication> getAppliedJobs(String employerName) {
-        return jobSeekers.getEmployerAppliedJobs(employerName);
+        return jobApplications.getAppliedJobs(employerName);
     }
 
     public List<Job> getJobSeekerJobs(String jobSeeker) {
@@ -32,22 +33,22 @@ public class Application {
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        return jobSeekers.findApplicants(jobName, from, to);
+        return jobApplications.findApplicants(jobName, from, to);
     }
 
     public String exportCsv(LocalDate date) {
-        return jobSeekers.exportCsv(date);
+        return jobApplications.exportCsv(date);
     }
 
     public String exportHtml(LocalDate date) {
-        return jobSeekers.exportHtml(date);
+        return jobApplications.exportHtml(date);
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
-        return jobSeekers.getSuccessfulApplications(employerName, jobName);
+        return jobApplications.getSuccessfulApplications(employerName, jobName);
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return jobSeekers.getUnsuccessfulApplications(employerName, jobName);
+        return jobApplications.getUnsuccessfulApplications(employerName, jobName);
     }
 }
