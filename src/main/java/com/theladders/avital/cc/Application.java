@@ -12,7 +12,7 @@ public class Application {
         jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
-    public void saveJobSeeker(String jobSeeker, String jobName, String jobType) {
+    public void saveJobSeeker(String jobSeeker, String jobName, JobType jobType) {
         jobSeekers.saveJobSeeker(jobSeeker, jobName, jobType);
     }
 

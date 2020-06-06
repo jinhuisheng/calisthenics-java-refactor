@@ -20,7 +20,7 @@ public class Exporter {
         return jobApplications.entrySet().stream().map(entry ->
                 entry.getValue().stream()
                         .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> "<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType() + "</td>" + "<td>" + entry.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>")
+                        .map(job -> "<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType().name() + "</td>" + "<td>" + entry.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>")
                         .collect(Collectors.joining()))
                 .collect(Collectors.joining());
     }
@@ -56,7 +56,7 @@ public class Exporter {
         return jobApplications.entrySet().stream().map(entry ->
                 entry.getValue().stream()
                         .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType() + "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
+                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType().name()+ "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
                         .collect(Collectors.joining()))
                 .collect(Collectors.joining());
     }

@@ -11,9 +11,9 @@ import java.util.List;
 public class JobSeekers {
     private final HashMap<String, List<Job>> jobSeekers = new HashMap<>();
 
-    public void saveJobSeeker(String jobSeeker, String jobName, String jobType) {
+    public void saveJobSeeker(String jobSeeker, String jobName, JobType type) {
         List<Job> saved = jobSeekers.getOrDefault(jobSeeker, new ArrayList<>());
-        saved.add(new Job(jobName, JobType.valueOf(jobType)));
+        saved.add(new Job(jobName, type));
         jobSeekers.put(jobSeeker, saved);
     }
 

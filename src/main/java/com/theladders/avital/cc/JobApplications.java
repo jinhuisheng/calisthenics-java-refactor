@@ -29,11 +29,11 @@ public class JobApplications {
     }
 
     private void checkLegal(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        if (jobApplication.getJobType().equals("JReq") && resumeApplicantName == null) {
+        if (jobApplication.getJobType() == JobType.JReq && resumeApplicantName == null) {
             failedApplications.add(jobApplication);
             throw new RequiresResumeForJReqJobException();
         }
-        if (jobApplication.getJobType().equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
+        if (jobApplication.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
     }
