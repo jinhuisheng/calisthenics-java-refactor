@@ -2,7 +2,6 @@ package com.theladders.avital.cc;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,17 +9,28 @@ import java.util.List;
  * @date 2020/6/5.
  */
 public class JobSeekers {
-    private final HashMap<String, List<Job>> jobSeekers = new HashMap<>();
+    private final List<JobSeeker> jobSeekers = new ArrayList<>();
     private final JobApplications jobApplications = new JobApplications();
 
-    public void saveJobSeeker(String jobSeeker, String jobName, JobType type) {
-        List<Job> saved = jobSeekers.getOrDefault(jobSeeker, new ArrayList<>());
-        saved.add(new Job(jobName, type));
-        jobSeekers.put(jobSeeker, saved);
+    public void saveJobSeeker(String jobSeekerName, String jobName, JobType jobType) {
+        JobSeeker jobSeeker = getJobSeeker(jobSeekerName);
+        jobSeeker.saveJob(new Job(jobName, jobType));
+        jobSeekers.add(jobSeeker);
     }
 
-    public List<Job> getJobSeekerJobs(String jobSeeker) {
-        return jobSeekers.get(jobSeeker);
+    private JobSeeker getJobSeeker(String jobSeekerName) {
+        return jobSeekers.stream()
+                .filter(jobSeeker -> jobSeeker.getName().equals(jobSeekerName))
+                .findFirst()
+                .orElse(new JobSeeker(jobSeekerName));
+    }
+
+    public List<Job> getJobSeekerJobs(String jobSeekerName) {
+        return jobSeekers.stream()
+                .filter(seeker -> seeker.getName().equals(jobSeekerName))
+                .map(JobSeeker::getSavedJobs)
+                .findFirst()
+                .orElseGet(ArrayList::new);
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
