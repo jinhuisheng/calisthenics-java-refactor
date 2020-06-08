@@ -2,8 +2,9 @@ package com.theladders.avital.cc;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -11,20 +12,21 @@ import java.util.stream.Collectors;
  * @date 2020/6/5.
  */
 public class Exporter {
-    public static String exportHtml(HashMap<String, List<JobApplication>> jobApplications, LocalDate date) {
-        String content = getHtmlContent(jobApplications, date);
+    public static String exportHtml(Set<Map.Entry<String, List<JobApplication>>> data, LocalDate date) {
+        String content = getHtmlContent(data, date);
         return exportHtml(content);
     }
 
-    private static String getHtmlContent(HashMap<String, List<JobApplication>> jobApplications, LocalDate date) {
-        return jobApplications.entrySet().stream().map(entry ->
-                entry.getValue().stream()
-                        .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> "<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType().name() + "</td>" + "<td>" + entry.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>")
-                        .collect(Collectors.joining()))
+    private static String getHtmlContent(Set<Map.Entry<String, List<JobApplication>>> data, LocalDate date) {
+        return data
+                .stream()
+                .map(entry ->
+                        entry.getValue().stream()
+                                .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                                .map(job -> "<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType().name() + "</td>" + "<td>" + entry.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>")
+                                .collect(Collectors.joining()))
                 .collect(Collectors.joining());
     }
-
 
     private static String exportHtml(String content) {
         return "<!DOCTYPE html>"
@@ -47,17 +49,19 @@ public class Exporter {
                 + "</html>";
     }
 
-    public static String exportCsv(HashMap<String, List<JobApplication>> jobApplications, LocalDate date) {
-        String content = getCsvContent(jobApplications, date);
+    public static String exportCsv(Set<Map.Entry<String, List<JobApplication>>> data, LocalDate date) {
+        String content = getCsvContent(data, date);
         return exportCsv(content);
     }
 
-    private static String getCsvContent(HashMap<String, List<JobApplication>> jobApplications, LocalDate date) {
-        return jobApplications.entrySet().stream().map(entry ->
-                entry.getValue().stream()
-                        .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType().name() + "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
-                        .collect(Collectors.joining()))
+    private static String getCsvContent(Set<Map.Entry<String, List<JobApplication>>> data, LocalDate date) {
+        return data
+                .stream()
+                .map(entry ->
+                        entry.getValue().stream()
+                                .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                                .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType().name() + "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
+                                .collect(Collectors.joining()))
                 .collect(Collectors.joining());
     }
 

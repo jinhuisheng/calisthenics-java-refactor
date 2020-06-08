@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,6 @@ import java.util.stream.Collectors;
  */
 public class JobSeekers {
     private final List<JobSeeker> jobSeekers = new ArrayList<>();
-    private final JobApplications jobApplications = new JobApplications();
     private final List<JobApplication> failedApplications = new ArrayList<>();
 
     public void saveJobSeeker(String jobSeekerName, String jobName, JobType jobType) {
@@ -38,11 +39,6 @@ public class JobSeekers {
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
-        temp_apply(jobSeekerName, resumeApplicantName, jobApplication);
-    }
-
-    public void temp_apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
         checkLegal(jobSeekerName, resumeApplicantName, jobApplication);
         saveApply(jobSeekerName, jobApplication);
     }
@@ -101,18 +97,29 @@ public class JobSeekers {
 
 
     public String exportCsv(LocalDate date) {
-        return jobApplications.exportCsv(date);
+        return Exporter.exportCsv(getExportData(), date);
     }
 
     public String exportHtml(LocalDate date) {
-        return jobApplications.exportHtml(date);
+        return Exporter.exportHtml(getExportData(), date);
+    }
+
+    private Set<Map.Entry<String, List<JobApplication>>> getExportData() {
+        return this.jobSeekers.stream()
+                .collect(Collectors.toMap(JobSeeker::getName, JobSeeker::getJobApplications))
+                .entrySet();
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getSuccessfulApplications(employerName, jobName);
+        return (int) this.jobSeekers.stream().flatMap(jobSeeker -> jobSeeker.getJobApplications().stream())
+                .filter(jobApplication -> jobApplication.getEmployerName().equals(employerName) && jobApplication.getJobName().equals(jobName))
+                .count();
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getUnsuccessfulApplications(employerName, jobName);
+        return (int) failedApplications.stream()
+                .filter(job -> job.getJobName().equals(jobName)
+                        && job.getEmployerName().equals(employerName))
+                .count();
     }
 }
