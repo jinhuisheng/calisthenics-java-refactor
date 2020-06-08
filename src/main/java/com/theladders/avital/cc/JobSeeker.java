@@ -10,6 +10,7 @@ import java.util.List;
 public class JobSeeker {
     private String name;
     private List<Job> savedJobs = new ArrayList<>();
+    private List<JobApplication> jobApplications = new ArrayList<>();
 
     public JobSeeker(String jobSeekerName) {
         this.name = jobSeekerName;
@@ -25,5 +26,13 @@ public class JobSeeker {
 
     public void saveJob(Job job) {
         savedJobs.add(job);
+    }
+
+    public void saveApply(JobApplication jobApplication) {
+        jobApplications.add(jobApplication);
+    }
+
+    public List<JobApplication> getJobApplications() {
+        return this.jobApplications;
     }
 }

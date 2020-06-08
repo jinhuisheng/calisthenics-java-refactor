@@ -56,7 +56,7 @@ public class Exporter {
         return jobApplications.entrySet().stream().map(entry ->
                 entry.getValue().stream()
                         .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType().name()+ "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
+                        .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType().name() + "," + entry.getKey() + "," + job.getApplicationTime() + "\n")
                         .collect(Collectors.joining()))
                 .collect(Collectors.joining());
     }
