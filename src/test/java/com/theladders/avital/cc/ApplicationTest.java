@@ -87,12 +87,12 @@ public class ApplicationTest {
     }
 
     @Test
-    public void jobseekers_should_be_able_to_save_jobs_published_by_employers_for_later_review() throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
+    public void jobseekers_should_be_able_to_save_jobs_published_by_employers_for_later_review() throws NotSupportedJobTypeException {
         String employerAlibaba = "Alibaba";
         String jobSeekerName = "Jacky";
         String jobName = "高级Java开发";
         application.publish(employerAlibaba, jobName, "JReq");
-        application.execute("save", jobSeekerName, jobName, "JReq", null, null, null);
+        application.save(jobSeekerName, jobName, "JReq");
         List<List<String>> savedJobs = application.getJobs(jobSeekerName, "published");
         List<List<String>> expected = new ArrayList<List<String>>() {{
             add(createNewJob("高级Java开发", "JReq"));

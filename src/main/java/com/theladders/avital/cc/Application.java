@@ -12,13 +12,13 @@ public class Application {
     private final HashMap<String, List<List<String>>> applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
-    public void execute(String command, String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        switch (command) {
-            case "save": {
-                save(employerName, jobName, jobType);
-                break;
-            }
-        }
+    public void save(String employerName, String jobName, String jobType) {
+        List<List<String>> saved = jobs.getOrDefault(employerName, new ArrayList<>());
+        saved.add(new ArrayList<String>() {{
+            add(jobName);
+            add(jobType);
+        }});
+        jobs.put(employerName, saved);
     }
 
     public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -45,16 +45,6 @@ public class Application {
             add(employerName);
         }});
         applied.put(jobSeekerName, saved);
-    }
-
-    private void save(String employerName, String jobName, String jobType) {
-        List<List<String>> saved = jobs.getOrDefault(employerName, new ArrayList<>());
-
-        saved.add(new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-        }});
-        jobs.put(employerName, saved);
     }
 
     public void publish(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
