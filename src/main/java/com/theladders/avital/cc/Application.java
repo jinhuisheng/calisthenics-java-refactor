@@ -12,20 +12,16 @@ public class Application {
     private final HashMap<String, List<List<String>>> applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
-    public void execute(String command, String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
+    public void execute(String command, String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
         switch (command) {
             case "save": {
                 save(employerName, jobName, jobType);
                 break;
             }
-            case "apply": {
-                apply(employerName, jobName, jobType, jobSeekerName, resumeApplicantName, applicationTime);
-                break;
-            }
         }
     }
 
-    private void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
+    public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (jobType.equals("JReq") && resumeApplicantName == null) {
             List<String> failedApplication = new ArrayList<String>() {{
                 add(jobName);
