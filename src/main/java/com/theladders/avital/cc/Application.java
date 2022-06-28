@@ -14,9 +14,6 @@ public class Application {
 
     public void execute(String command, String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws NotSupportedJobTypeException, RequiresResumeForJReqJobException, InvalidResumeException {
         switch (command) {
-            case "publish":
-                publish(employerName, jobName, jobType);
-                break;
             case "save": {
                 save(employerName, jobName, jobType);
                 break;
