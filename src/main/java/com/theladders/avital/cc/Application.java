@@ -10,6 +10,7 @@ import static java.util.Map.*;
 public class Application {
     private final HashMap<String, List<List<String>>> jobs = new HashMap<>();
     private final HashMap<String, List<List<String>>> applied = new HashMap<>();
+    private final HashMap<String, List<JobApplication>> temp_applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
     public void save(String employerName, String jobName, String jobType) {
@@ -45,6 +46,10 @@ public class Application {
             add(employerName);
         }});
         applied.put(jobSeekerName, saved);
+
+        List<JobApplication> saved_temp = this.temp_applied.getOrDefault(jobSeekerName, new ArrayList<>());
+        saved_temp.add(new JobApplication(jobName, jobType, applicationTime, employerName));
+        this.temp_applied.put(jobSeekerName, saved_temp);
     }
 
     public void publish(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
@@ -61,12 +66,12 @@ public class Application {
         jobs.put(employerName, alreadyPublished);
     }
 
-    public List<List<String>> getJobs(String employerName, String type) {
-        if (type.equals("applied")) {
-            return applied.get(employerName);
-        }
-
+    public List<List<String>> getJobs(String employerName) {
         return jobs.get(employerName);
+    }
+
+    public List<JobApplication> getAppliedJobs(String employerName) {
+        return temp_applied.get(employerName);
     }
 
     public List<String> findApplicants(String jobName) {

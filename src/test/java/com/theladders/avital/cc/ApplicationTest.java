@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -13,13 +14,8 @@ import static org.junit.Assert.assertThat;
 public class ApplicationTest {
     Application application;
 
-    private ArrayList<String> createNewJob(String jobName, String jobType, String employerName, String applicationTime) {
-        return new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-            add(applicationTime);
-            add(employerName);
-        }};
+    private JobApplication createJobApplication(String jobName, String jobType, String employerName, String applicationTime) {
+        return new JobApplication(jobName, jobType, applicationTime, employerName);
     }
 
     private ArrayList<String> createNewJob(final String jobName, final String jobType) {
@@ -40,7 +36,7 @@ public class ApplicationTest {
         String employerName = "";
         String jobName = "高级前端开发";
         application.publish(employerName, jobName, "JReq");
-        List<List<String>> jobs = application.getJobs(employerName, "published");
+        List<List<String>> jobs = application.getJobs(employerName);
         List<List<String>> expected = new ArrayList<List<String>>() {{
             add(createNewJob("高级前端开发", "JReq"));
         }};
@@ -56,7 +52,7 @@ public class ApplicationTest {
         String juniorJavaDevJob = "Java开发";
         application.publish(employerAlibaba, seniorJavaDevJob, "JReq");
         application.publish(employerTencent, juniorJavaDevJob, "JReq");
-        List<List<String>> jobs = application.getJobs(employerAlibaba, "published");
+        List<List<String>> jobs = application.getJobs(employerAlibaba);
         List<List<String>> expected = new ArrayList<List<String>>() {{
             add(createNewJob("高级Java开发", "JReq"));
         }};
@@ -70,7 +66,7 @@ public class ApplicationTest {
         String seniorJavaDevJob = "高级Java开发";
 
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
-        List<List<String>> jobs = application.getJobs(employerAlibaba, "published");
+        List<List<String>> jobs = application.getJobs(employerAlibaba);
         List<List<String>> expected = new ArrayList<List<String>>() {{
             add(createNewJob("高级Java开发", "ATS"));
         }};
@@ -93,7 +89,7 @@ public class ApplicationTest {
         String jobName = "高级Java开发";
         application.publish(employerAlibaba, jobName, "JReq");
         application.save(jobSeekerName, jobName, "JReq");
-        List<List<String>> savedJobs = application.getJobs(jobSeekerName, "published");
+        List<List<String>> savedJobs = application.getJobs(jobSeekerName);
         List<List<String>> expected = new ArrayList<List<String>>() {{
             add(createNewJob("高级Java开发", "JReq"));
         }};
@@ -112,13 +108,11 @@ public class ApplicationTest {
         application.publish(employerAlibaba, juniorJavaDevJob, "ATS");
         application.apply(employerAlibaba, juniorJavaDevJob, "ATS", jobSeekerName, null, LocalDate.parse("2020-01-01"));
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerName, null, LocalDate.parse("2020-01-01"));
-        List<List<String>> appliedJobs = application.getJobs(jobSeekerName, "applied");
-        List<List<String>> expected = new ArrayList<List<String>>() {{
-            add(createNewJob("Java开发", "ATS", "Alibaba", "2020-01-01"));
-            add(createNewJob("高级Java开发", "ATS", "Alibaba", "2020-01-01"));
-        }};
-
-        assertThat(appliedJobs, is(expected));
+        List<JobApplication> appliedJobs = application.getAppliedJobs(jobSeekerName);
+        assertThat(appliedJobs, is(Arrays.asList(
+                createJobApplication("Java开发", "ATS", "Alibaba", "2020-01-01"),
+                createJobApplication("高级Java开发", "ATS", "Alibaba", "2020-01-01")
+        )));
     }
 
     @Test(expected = RequiresResumeForJReqJobException.class)
