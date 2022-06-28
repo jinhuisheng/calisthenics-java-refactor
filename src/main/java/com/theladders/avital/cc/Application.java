@@ -76,35 +76,35 @@ public class Application {
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        Predicate<List<String>> condition = condition(jobName, from, to);
+        Predicate<JobApplication> condition = condition(jobName, from, to);
         return findApplicants(condition);
     }
 
-    private Predicate<List<String>> condition(String jobName, LocalDate from, LocalDate to) {
+    private Predicate<JobApplication> condition(String jobName, LocalDate from, LocalDate to) {
         if (from == null && to == null) {
-            return job -> job.get(0).equals(jobName);
+            return job -> job.getJobName().equals(jobName);
         }
         if (jobName == null && to == null) {
-            return job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         if (jobName == null && from == null) {
-            return job -> !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         if (jobName == null) {
-            return job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
         if (to != null) {
-            return job -> job.get(0).equals(jobName) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> job.getJobName().equals(jobName) && !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         }
-        return job -> job.get(0).equals(jobName) && !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        return job -> job.getJobName().equals(jobName) && !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 
-    private List<String> findApplicants(Predicate<List<String>> predicate) {
+    private List<String> findApplicants(Predicate<JobApplication> predicate) {
         List<String> result = new ArrayList<String>() {
         };
-        for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-            String applicant = getApplicantFrom(set);
-            List<List<String>> jobs = set.getValue();
+        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+            String applicant = set.getKey();
+            List<JobApplication> jobs = set.getValue();
             boolean hasAppliedToThisJob = jobs.stream().anyMatch(predicate);
             if (hasAppliedToThisJob) {
                 result.add(applicant);
@@ -121,7 +121,7 @@ public class Application {
                 List<List<String>> appliedOnDate = jobs1.stream().filter(job -> job.get(2).equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))).collect(Collectors.toList());
 
                 for (List<String> job : appliedOnDate) {
-                    result = result.concat(job.get(3) + "," + job.get(0) + "," + job.get(1) + "," + getApplicantFrom(set) + "," + job.get(2) + "\n");
+                    result = result.concat(job.get(3) + "," + job.get(0) + "," + job.get(1) + "," + set.getKey() + "," + job.get(2) + "\n");
                 }
             }
             return result;
@@ -132,7 +132,7 @@ public class Application {
                 List<List<String>> appliedOnDate = jobs1.stream().filter(job -> job.get(2).equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))).collect(Collectors.toList());
 
                 for (List<String> job : appliedOnDate) {
-                    content = content.concat("<tr>" + "<td>" + job.get(3) + "</td>" + "<td>" + job.get(0) + "</td>" + "<td>" + job.get(1) + "</td>" + "<td>" + getApplicantFrom(set) + "</td>" + "<td>" + job.get(2) + "</td>" + "</tr>");
+                    content = content.concat("<tr>" + "<td>" + job.get(3) + "</td>" + "<td>" + job.get(0) + "</td>" + "<td>" + job.get(1) + "</td>" + "<td>" + set.getKey() + "</td>" + "<td>" + job.get(2) + "</td>" + "</tr>");
                 }
             }
 
@@ -155,10 +155,6 @@ public class Application {
                     + "</body>"
                     + "</html>";
         }
-    }
-
-    private String getApplicantFrom(Entry<String, List<List<String>>> set) {
-        return set.getKey();
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {

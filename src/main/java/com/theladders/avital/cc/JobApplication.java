@@ -11,6 +11,22 @@ public class JobApplication {
     private final String applicationTime;
     private final String employerName;
 
+    public String getJobName() {
+        return jobName;
+    }
+
+    public String getJobType() {
+        return jobType;
+    }
+
+    public String getApplicationTime() {
+        return applicationTime;
+    }
+
+    public String getEmployerName() {
+        return employerName;
+    }
+
     @Override
     public String toString() {
         return "JobApplication{" +
