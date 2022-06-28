@@ -75,14 +75,6 @@ public class Application {
         return temp_applied.get(employerName);
     }
 
-    public List<String> findApplicants(String jobName) {
-        return findApplicants(jobName, null);
-    }
-
-    public List<String> findApplicants(String jobName, LocalDate from) {
-        return findApplicants(jobName, from, null);
-    }
-
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
         Predicate<List<String>> condition = condition(jobName, from, to);
         return findApplicants(condition);

@@ -146,7 +146,7 @@ public class ApplicationTest {
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerJacky, null, LocalDate.now());
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerLam, null, LocalDate.now());
-        List<String> applicants = application.findApplicants(seniorJavaDevJob);
+        List<String> applicants = application.findApplicants(seniorJavaDevJob,null,null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Lam");
@@ -166,7 +166,7 @@ public class ApplicationTest {
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerJacky, null, LocalDate.parse("1997-07-01"));
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerHo, null, LocalDate.parse("1999-12-20"));
-        List<String> applicants = application.findApplicants(null, LocalDate.parse("1999-12-20"));
+        List<String> applicants = application.findApplicants(null, LocalDate.parse("1999-12-20"),null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Ho");
@@ -229,7 +229,7 @@ public class ApplicationTest {
         application.apply(employerAlibaba, seniorJavaDevJob, "JReq", jobSeekerJacky, resumeApplicantName, LocalDate.parse("1999-12-20"));
         application.apply(employerAlibaba, juniorJavaDevJob, "ATS", jobSeekerHo, null, LocalDate.parse("1999-12-20"));
 
-        List<String> applicants = application.findApplicants(seniorJavaDevJob, LocalDate.parse("1999-12-20"));
+        List<String> applicants = application.findApplicants(seniorJavaDevJob, LocalDate.parse("1999-12-20"),null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Jacky");
