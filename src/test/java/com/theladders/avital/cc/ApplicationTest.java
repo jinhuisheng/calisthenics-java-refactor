@@ -31,7 +31,7 @@ public class ApplicationTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         application = new Application();
     }
 
