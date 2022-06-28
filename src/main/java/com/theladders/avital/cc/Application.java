@@ -3,6 +3,7 @@ package com.theladders.avital.cc;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Map.*;
@@ -83,83 +84,41 @@ public class Application {
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
+        Predicate<List<String>> condition = condition(jobName, from, to);
+        return findApplicants(condition);
+    }
+
+    private Predicate<List<String>> condition(String jobName, LocalDate from, LocalDate to) {
         if (from == null && to == null) {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean hasAppliedToThisJob = jobs.stream().anyMatch(job -> job.get(0).equals(jobName));
-                if (hasAppliedToThisJob) {
-                    result.add(applicant);
-                }
-            }
-            return result;
-        } else if (jobName == null && to == null) {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean isAppliedThisDate = jobs.stream().anyMatch(job ->
-                        !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                if (isAppliedThisDate) {
-                    result.add(applicant);
-                }
-            }
-            return result;
-        } else if (jobName == null && from == null) {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean isAppliedThisDate = jobs.stream().anyMatch(job ->
-                        !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                if (isAppliedThisDate) {
-                    result.add(applicant);
-                }
-            }
-            return result;
-
-        } else if (jobName == null) {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean isAppliedThisDate = jobs.stream().anyMatch(job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                if (isAppliedThisDate) {
-                    result.add(applicant);
-                }
-            }
-            return result;
-
-        } else if (to != null) {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean isAppliedThisDate = jobs.stream().anyMatch(job -> job.get(0).equals(jobName) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                if (isAppliedThisDate) {
-                    result.add(applicant);
-                }
-            }
-            return result;
-        } else {
-            List<String> result = new ArrayList<String>() {
-            };
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                String applicant = getApplicantFrom(set);
-                List<List<String>> jobs = set.getValue();
-                boolean isAppliedThisDate = jobs.stream().anyMatch(job -> job.get(0).equals(jobName) && !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-                if (isAppliedThisDate) {
-                    result.add(applicant);
-                }
-            }
-            return result;
+            return job -> job.get(0).equals(jobName);
         }
+        if (jobName == null && to == null) {
+            return job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        }
+        if (jobName == null && from == null) {
+            return job -> !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        }
+        if (jobName == null) {
+            return job -> !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        }
+        if (to != null) {
+            return job -> job.get(0).equals(jobName) && !to.isBefore(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        }
+        return job -> job.get(0).equals(jobName) && !from.isAfter(LocalDate.parse(job.get(2), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+    }
+
+    private List<String> findApplicants(Predicate<List<String>> predicate) {
+        List<String> result = new ArrayList<String>() {
+        };
+        for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
+            String applicant = getApplicantFrom(set);
+            List<List<String>> jobs = set.getValue();
+            boolean hasAppliedToThisJob = jobs.stream().anyMatch(predicate);
+            if (hasAppliedToThisJob) {
+                result.add(applicant);
+            }
+        }
+        return result;
     }
 
     public String export(String type, LocalDate date) {
