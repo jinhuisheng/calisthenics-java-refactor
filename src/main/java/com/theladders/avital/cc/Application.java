@@ -12,32 +12,26 @@ import static java.util.Map.*;
 public class Application {
     private final HashMap<String, List<Job>> jobs = new HashMap<>();
     private final HashMap<String, List<JobApplication>> applied = new HashMap<>();
-    private final List<List<String>> failedApplications = new ArrayList<>();
+    private final List<JobApplication> failedApplications = new ArrayList<>();
 
     public void save(String employerName, String jobName, String jobType) {
-        List<Job> temp_alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-        temp_alreadyPublished.add(new Job(jobName, jobType));
-        jobs.put(employerName, temp_alreadyPublished);
+        List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+        alreadyPublished.add(new Job(jobName, jobType));
+        jobs.put(employerName, alreadyPublished);
     }
 
     public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (jobType.equals("JReq") && resumeApplicantName == null) {
-            List<String> failedApplication = new ArrayList<String>() {{
-                add(jobName);
-                add(jobType);
-                add(applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                add(employerName);
-            }};
-            failedApplications.add(failedApplication);
+            failedApplications.add(new JobApplication(jobName, jobType, applicationTime, employerName));
             throw new RequiresResumeForJReqJobException();
         }
 
         if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
-        List<JobApplication> saved_temp = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
-        saved_temp.add(new JobApplication(jobName, jobType, applicationTime, employerName));
-        this.applied.put(jobSeekerName, saved_temp);
+        List<JobApplication> saved = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
+        saved.add(new JobApplication(jobName, jobType, applicationTime, employerName));
+        this.applied.put(jobSeekerName, saved);
     }
 
     public void publish(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
@@ -45,9 +39,9 @@ public class Application {
             throw new NotSupportedJobTypeException();
         }
 
-        List<Job> temp_alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-        temp_alreadyPublished.add(new Job(jobName, jobType));
-        jobs.put(employerName, temp_alreadyPublished);
+        List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+        alreadyPublished.add(new Job(jobName, jobType));
+        jobs.put(employerName, alreadyPublished);
     }
 
     public List<Job> getJobs(String employerName) {
@@ -153,6 +147,6 @@ public class Application {
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return (int) failedApplications.stream().filter(job -> job.get(0).equals(jobName) && job.get(3).equals(employerName)).count();
+        return (int) failedApplications.stream().filter(job -> job.getJobName().equals(jobName) && job.getEmployerName().equals(employerName)).count();
     }
 }
