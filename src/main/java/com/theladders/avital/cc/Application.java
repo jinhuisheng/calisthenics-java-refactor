@@ -11,13 +11,14 @@ import static java.util.Map.*;
 
 public class Application {
     private final HashMap<String, List<Job>> jobs = new HashMap<>();
+    private final HashMap<String, List<Job>> jobSeekerSavedJobs = new HashMap<>();
     private final HashMap<String, List<JobApplication>> applied = new HashMap<>();
     private final List<JobApplication> failedApplications = new ArrayList<>();
 
-    public void save(String employerName, Job job) {
-        List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+    public void save(String jobSeeker, Job job) {
+        List<Job> alreadyPublished = jobSeekerSavedJobs.getOrDefault(jobSeeker, new ArrayList<>());
         alreadyPublished.add(job);
-        jobs.put(employerName, alreadyPublished);
+        jobSeekerSavedJobs.put(jobSeeker, alreadyPublished);
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -45,6 +46,10 @@ public class Application {
 
     public List<Job> getJobs(String employerName) {
         return jobs.get(employerName);
+    }
+
+    public List<Job> getJobSeekSavedJobs(String jobSeeker) {
+        return jobSeekerSavedJobs.get(jobSeeker);
     }
 
     public List<JobApplication> getAppliedJobs(String employerName) {

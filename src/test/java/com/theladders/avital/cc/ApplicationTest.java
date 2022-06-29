@@ -80,7 +80,7 @@ public class ApplicationTest {
         String jobName = "高级Java开发";
         application.publish(employerAlibaba, new Job(jobName, "JReq"));
         application.save(jobSeekerName, new Job(jobName, "JReq"));
-        List<Job> savedJobs = application.getJobs(jobSeekerName);
+        List<Job> savedJobs = application.getJobSeekSavedJobs(jobSeekerName);
         List<Job> expected = Arrays.asList(createNewJob("高级Java开发", "JReq"));
         assertThat(savedJobs, is(expected));
     }
