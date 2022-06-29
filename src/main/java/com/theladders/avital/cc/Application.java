@@ -138,15 +138,15 @@ public class Application {
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
-        int result = 0;
-        for (Entry<String, List<JobApplication>> set : this.applied.entrySet()) {
-            List<JobApplication> jobs = set.getValue();
-            result += jobs.stream().anyMatch(job -> job.getEmployerName().equals(employerName) && job.getJobName().equals(jobName)) ? 1 : 0;
-        }
-        return result;
+        return (int) this.applied.entrySet().stream()
+                .filter(entry -> entry.getValue().stream()
+                        .anyMatch(job -> job.getEmployerName().equals(employerName) && job.getJobName().equals(jobName))
+                ).count();
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return (int) failedApplications.stream().filter(job -> job.getJobName().equals(jobName) && job.getEmployerName().equals(employerName)).count();
+        return (int) failedApplications.stream()
+                .filter(job -> job.getJobName().equals(jobName) && job.getEmployerName().equals(employerName))
+                .count();
     }
 }
