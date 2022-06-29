@@ -10,17 +10,14 @@ import java.util.stream.Collectors;
 import static java.util.Map.*;
 
 public class Application {
-    private final HashMap<String, List<List<String>>> jobs = new HashMap<>();
+    private final HashMap<String, List<Job>> jobs = new HashMap<>();
     private final HashMap<String, List<JobApplication>> applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
     public void save(String employerName, String jobName, String jobType) {
-        List<List<String>> saved = jobs.getOrDefault(employerName, new ArrayList<>());
-        saved.add(new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-        }});
-        jobs.put(employerName, saved);
+        List<Job> temp_alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+        temp_alreadyPublished.add(new Job(jobName, jobType));
+        jobs.put(employerName, temp_alreadyPublished);
     }
 
     public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -48,16 +45,12 @@ public class Application {
             throw new NotSupportedJobTypeException();
         }
 
-        List<List<String>> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-
-        alreadyPublished.add(new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-        }});
-        jobs.put(employerName, alreadyPublished);
+        List<Job> temp_alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
+        temp_alreadyPublished.add(new Job(jobName, jobType));
+        jobs.put(employerName, temp_alreadyPublished);
     }
 
-    public List<List<String>> getJobs(String employerName) {
+    public List<Job> getJobs(String employerName) {
         return jobs.get(employerName);
     }
 
@@ -66,8 +59,7 @@ public class Application {
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        Predicate<JobApplication> condition = condition(jobName, from, to);
-        return findApplicants(condition);
+        return findApplicants(condition(jobName, from, to));
     }
 
     private Predicate<JobApplication> condition(String jobName, LocalDate from, LocalDate to) {
@@ -109,7 +101,7 @@ public class Application {
             List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
             for (JobApplication job : appliedOnDate) {
                 result.append(MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                                job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
+                        job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
             }
         }
 

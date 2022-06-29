@@ -18,13 +18,9 @@ public class ApplicationTest {
         return new JobApplication(jobName, jobType, applicationTime, employerName);
     }
 
-    private ArrayList<String> createNewJob(final String jobName, final String jobType) {
-        return new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-        }};
+    private Job createNewJob(final String jobName, final String jobType) {
+        return new Job(jobName, jobType);
     }
-
 
     @Before
     public void setUp() {
@@ -36,11 +32,9 @@ public class ApplicationTest {
         String employerName = "";
         String jobName = "高级前端开发";
         application.publish(employerName, jobName, "JReq");
-        List<List<String>> jobs = application.getJobs(employerName);
-        List<List<String>> expected = new ArrayList<List<String>>() {{
-            add(createNewJob("高级前端开发", "JReq"));
-        }};
-
+        List<Job> jobs = application.getJobs(employerName);
+        List<Job> expected = Arrays.asList(
+                createNewJob("高级前端开发", "JReq"));
         assertThat(jobs, is(expected));
     }
 
@@ -52,11 +46,9 @@ public class ApplicationTest {
         String juniorJavaDevJob = "Java开发";
         application.publish(employerAlibaba, seniorJavaDevJob, "JReq");
         application.publish(employerTencent, juniorJavaDevJob, "JReq");
-        List<List<String>> jobs = application.getJobs(employerAlibaba);
-        List<List<String>> expected = new ArrayList<List<String>>() {{
-            add(createNewJob("高级Java开发", "JReq"));
-        }};
-
+        List<Job> jobs = application.getJobs(employerAlibaba);
+        List<Job> expected = Arrays.asList(
+                createNewJob("高级Java开发", "JReq"));
         assertThat(jobs, is(expected));
     }
 
@@ -66,11 +58,10 @@ public class ApplicationTest {
         String seniorJavaDevJob = "高级Java开发";
 
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
-        List<List<String>> jobs = application.getJobs(employerAlibaba);
-        List<List<String>> expected = new ArrayList<List<String>>() {{
-            add(createNewJob("高级Java开发", "ATS"));
-        }};
 
+        List<Job> jobs = application.getJobs(employerAlibaba);
+        List<Job> expected = Arrays.asList(
+                createNewJob("高级Java开发", "ATS"));
         assertThat(jobs, is(expected));
     }
 
@@ -89,11 +80,8 @@ public class ApplicationTest {
         String jobName = "高级Java开发";
         application.publish(employerAlibaba, jobName, "JReq");
         application.save(jobSeekerName, jobName, "JReq");
-        List<List<String>> savedJobs = application.getJobs(jobSeekerName);
-        List<List<String>> expected = new ArrayList<List<String>>() {{
-            add(createNewJob("高级Java开发", "JReq"));
-        }};
-
+        List<Job> savedJobs = application.getJobs(jobSeekerName);
+        List<Job> expected = Arrays.asList(createNewJob("高级Java开发", "JReq"));
         assertThat(savedJobs, is(expected));
     }
 
