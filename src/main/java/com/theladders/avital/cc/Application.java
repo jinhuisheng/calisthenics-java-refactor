@@ -10,7 +10,6 @@ import static java.util.Map.*;
 
 public class Application {
     private final HashMap<String, List<List<String>>> jobs = new HashMap<>();
-    private final HashMap<String, List<List<String>>> applied = new HashMap<>();
     private final HashMap<String, List<JobApplication>> temp_applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
@@ -38,16 +37,6 @@ public class Application {
         if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
-        List<List<String>> saved = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
-
-        saved.add(new ArrayList<String>() {{
-            add(jobName);
-            add(jobType);
-            add(applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            add(employerName);
-        }});
-        applied.put(jobSeekerName, saved);
-
         List<JobApplication> saved_temp = this.temp_applied.getOrDefault(jobSeekerName, new ArrayList<>());
         saved_temp.add(new JobApplication(jobName, jobType, applicationTime, employerName));
         this.temp_applied.put(jobSeekerName, saved_temp);
@@ -115,54 +104,62 @@ public class Application {
 
     public String export(String type, LocalDate date) {
         if (type.equals("csv")) {
-            String result = "Employer,Job,Job Type,Applicants,Date" + "\n";
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                List<List<String>> jobs1 = set.getValue();
-                List<List<String>> appliedOnDate = jobs1.stream().filter(job -> job.get(2).equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))).collect(Collectors.toList());
-
-                for (List<String> job : appliedOnDate) {
-                    result = result.concat(job.get(3) + "," + job.get(0) + "," + job.get(1) + "," + set.getKey() + "," + job.get(2) + "\n");
-                }
-            }
-            return result;
+            return exportCsv(date);
         } else {
-            String content = "";
-            for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-                List<List<String>> jobs1 = set.getValue();
-                List<List<String>> appliedOnDate = jobs1.stream().filter(job -> job.get(2).equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))).collect(Collectors.toList());
-
-                for (List<String> job : appliedOnDate) {
-                    content = content.concat("<tr>" + "<td>" + job.get(3) + "</td>" + "<td>" + job.get(0) + "</td>" + "<td>" + job.get(1) + "</td>" + "<td>" + set.getKey() + "</td>" + "<td>" + job.get(2) + "</td>" + "</tr>");
-                }
-            }
-
-            return "<!DOCTYPE html>"
-                    + "<body>"
-                    + "<table>"
-                    + "<thead>"
-                    + "<tr>"
-                    + "<th>Employer</th>"
-                    + "<th>Job</th>"
-                    + "<th>Job Type</th>"
-                    + "<th>Applicants</th>"
-                    + "<th>Date</th>"
-                    + "</tr>"
-                    + "</thead>"
-                    + "<tbody>"
-                    + content
-                    + "</tbody>"
-                    + "</table>"
-                    + "</body>"
-                    + "</html>";
+            return exportHtml(date);
         }
+    }
+
+    private String exportHtml(LocalDate date) {
+        String content = "";
+        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+            List<JobApplication> jobs1 = set.getValue();
+            List<JobApplication> appliedOnDate = jobs1.stream()
+                    .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                    .collect(Collectors.toList());
+            for (JobApplication job : appliedOnDate) {
+                content = content.concat("<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType() + "</td>" + "<td>" + set.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>");
+            }
+        }
+
+        return "<!DOCTYPE html>"
+                + "<body>"
+                + "<table>"
+                + "<thead>"
+                + "<tr>"
+                + "<th>Employer</th>"
+                + "<th>Job</th>"
+                + "<th>Job Type</th>"
+                + "<th>Applicants</th>"
+                + "<th>Date</th>"
+                + "</tr>"
+                + "</thead>"
+                + "<tbody>"
+                + content
+                + "</tbody>"
+                + "</table>"
+                + "</body>"
+                + "</html>";
+    }
+
+    private String exportCsv(LocalDate date) {
+        StringBuilder result = new StringBuilder("Employer,Job,Job Type,Applicants,Date" + "\n");
+        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+            List<JobApplication> appliedJobs = set.getValue();
+            String appliedJobStr = appliedJobs.stream()
+                    .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                    .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType() + "," + set.getKey() + "," + job.getApplicationTime() + "\n")
+                    .collect(Collectors.joining());
+            result.append(appliedJobStr);
+        }
+        return result.toString();
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
         int result = 0;
-        for (Entry<String, List<List<String>>> set : this.applied.entrySet()) {
-            List<List<String>> jobs = set.getValue();
-
-            result += jobs.stream().anyMatch(job -> job.get(3).equals(employerName) && job.get(0).equals(jobName)) ? 1 : 0;
+        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+            List<JobApplication> jobs = set.getValue();
+            result += jobs.stream().anyMatch(job -> job.getEmployerName().equals(employerName) && job.getJobName().equals(jobName)) ? 1 : 0;
         }
         return result;
     }
