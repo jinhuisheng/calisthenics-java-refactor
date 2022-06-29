@@ -14,33 +14,32 @@ public class Application {
     private final HashMap<String, List<JobApplication>> applied = new HashMap<>();
     private final List<JobApplication> failedApplications = new ArrayList<>();
 
-    public void save(String employerName, String jobName, String jobType) {
+    public void save(String employerName, Job job) {
         List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-        alreadyPublished.add(new Job(jobName, jobType));
+        alreadyPublished.add(job);
         jobs.put(employerName, alreadyPublished);
     }
 
-    public void apply(String employerName, String jobName, String jobType, String jobSeekerName, String resumeApplicantName, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        if (jobType.equals("JReq") && resumeApplicantName == null) {
-            failedApplications.add(new JobApplication(jobName, jobType, applicationTime, employerName));
+    public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        if (jobApplication.getJobType().equals("JReq") && resumeApplicantName == null) {
+            failedApplications.add(jobApplication);
             throw new RequiresResumeForJReqJobException();
         }
 
-        if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
+        if (jobApplication.getJobType().equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
         List<JobApplication> saved = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
-        saved.add(new JobApplication(jobName, jobType, applicationTime, employerName));
+        saved.add(jobApplication);
         this.applied.put(jobSeekerName, saved);
     }
 
-    public void publish(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
-        if (!jobType.equals("JReq") && !jobType.equals("ATS")) {
+    public void publish(String employerName, Job job) throws NotSupportedJobTypeException {
+        if (!job.getJobType().equals("JReq") && !job.getJobType().equals("ATS")) {
             throw new NotSupportedJobTypeException();
         }
-
         List<Job> alreadyPublished = jobs.getOrDefault(employerName, new ArrayList<>());
-        alreadyPublished.add(new Job(jobName, jobType));
+        alreadyPublished.add(job);
         jobs.put(employerName, alreadyPublished);
     }
 
