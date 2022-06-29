@@ -146,7 +146,7 @@ public class ApplicationTest {
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerJacky, null, LocalDate.now());
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerLam, null, LocalDate.now());
-        List<String> applicants = application.findApplicants(seniorJavaDevJob,null,null);
+        List<String> applicants = application.findApplicants(seniorJavaDevJob, null, null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Lam");
@@ -166,7 +166,7 @@ public class ApplicationTest {
         application.publish(employerAlibaba, seniorJavaDevJob, "ATS");
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerJacky, null, LocalDate.parse("1997-07-01"));
         application.apply(employerAlibaba, seniorJavaDevJob, "ATS", jobSeekerHo, null, LocalDate.parse("1999-12-20"));
-        List<String> applicants = application.findApplicants(null, LocalDate.parse("1999-12-20"),null);
+        List<String> applicants = application.findApplicants(null, LocalDate.parse("1999-12-20"), null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Ho");
@@ -229,7 +229,7 @@ public class ApplicationTest {
         application.apply(employerAlibaba, seniorJavaDevJob, "JReq", jobSeekerJacky, resumeApplicantName, LocalDate.parse("1999-12-20"));
         application.apply(employerAlibaba, juniorJavaDevJob, "ATS", jobSeekerHo, null, LocalDate.parse("1999-12-20"));
 
-        List<String> applicants = application.findApplicants(seniorJavaDevJob, LocalDate.parse("1999-12-20"),null);
+        List<String> applicants = application.findApplicants(seniorJavaDevJob, LocalDate.parse("1999-12-20"), null);
 
         List<String> expected = new ArrayList<String>() {{
             add("Jacky");
@@ -307,7 +307,7 @@ public class ApplicationTest {
         application.apply(employerAlibaba, juniorJavaDevJob, "ATS", jobSeekerLam, null, LocalDate.parse("1999-12-20"));
         application.apply(employerAlibaba, seniorJavaDevJob, "JReq", jobSeekerLam, lamResume, LocalDate.parse("1999-12-20"));
 
-        String csv = application.export("csv", LocalDate.parse("1999-12-20"));
+        String csv = application.exportCsv(LocalDate.parse("1999-12-20"));
         String expected = "Employer,Job,Job Type,Applicants,Date" + "\n" + "Alibaba,Java开发,ATS,Ho,1999-12-20" + "\n" + "Alibaba,Java开发,ATS,Lam,1999-12-20" + "\n" + "Alibaba,高级Java开发,JReq,Lam,1999-12-20" + "\n" + "Alibaba,高级Java开发,JReq,Jacky,1999-12-20" + "\n";
 
         assertThat(csv, is(expected));
@@ -332,7 +332,7 @@ public class ApplicationTest {
         application.apply(employerAlibaba, juniorJavaDevJob, "ATS", jobSeekerLam, null, LocalDate.parse("1999-12-20"));
         application.apply(employerAlibaba, seniorJavaDevJob, "JReq", jobSeekerLam, lamResume, LocalDate.parse("1999-12-20"));
 
-        String csv = application.export("html", LocalDate.parse("1999-12-20"));
+        String csv = application.export(LocalDate.parse("1999-12-20"));
         String expected = "<!DOCTYPE html>"
                 + "<body>"
                 + "<table>"

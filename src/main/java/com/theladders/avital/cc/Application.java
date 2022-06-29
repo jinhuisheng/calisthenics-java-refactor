@@ -1,5 +1,6 @@
 package com.theladders.avital.cc;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -10,7 +11,7 @@ import static java.util.Map.*;
 
 public class Application {
     private final HashMap<String, List<List<String>>> jobs = new HashMap<>();
-    private final HashMap<String, List<JobApplication>> temp_applied = new HashMap<>();
+    private final HashMap<String, List<JobApplication>> applied = new HashMap<>();
     private final List<List<String>> failedApplications = new ArrayList<>();
 
     public void save(String employerName, String jobName, String jobType) {
@@ -37,9 +38,9 @@ public class Application {
         if (jobType.equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
-        List<JobApplication> saved_temp = this.temp_applied.getOrDefault(jobSeekerName, new ArrayList<>());
+        List<JobApplication> saved_temp = this.applied.getOrDefault(jobSeekerName, new ArrayList<>());
         saved_temp.add(new JobApplication(jobName, jobType, applicationTime, employerName));
-        this.temp_applied.put(jobSeekerName, saved_temp);
+        this.applied.put(jobSeekerName, saved_temp);
     }
 
     public void publish(String employerName, String jobName, String jobType) throws NotSupportedJobTypeException {
@@ -61,7 +62,7 @@ public class Application {
     }
 
     public List<JobApplication> getAppliedJobs(String employerName) {
-        return temp_applied.get(employerName);
+        return applied.get(employerName);
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
@@ -91,7 +92,7 @@ public class Application {
     private List<String> findApplicants(Predicate<JobApplication> predicate) {
         List<String> result = new ArrayList<String>() {
         };
-        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+        for (Entry<String, List<JobApplication>> set : this.applied.entrySet()) {
             String applicant = set.getKey();
             List<JobApplication> jobs = set.getValue();
             boolean hasAppliedToThisJob = jobs.stream().anyMatch(predicate);
@@ -102,23 +103,13 @@ public class Application {
         return result;
     }
 
-    public String export(String type, LocalDate date) {
-        if (type.equals("csv")) {
-            return exportCsv(date);
-        } else {
-            return exportHtml(date);
-        }
-    }
-
-    private String exportHtml(LocalDate date) {
-        String content = "";
-        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
-            List<JobApplication> jobs1 = set.getValue();
-            List<JobApplication> appliedOnDate = jobs1.stream()
-                    .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                    .collect(Collectors.toList());
+    public String export(LocalDate date) {
+        StringBuilder result = new StringBuilder();
+        for (Entry<String, List<JobApplication>> set : this.applied.entrySet()) {
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
             for (JobApplication job : appliedOnDate) {
-                content = content.concat("<tr>" + "<td>" + job.getEmployerName() + "</td>" + "<td>" + job.getJobName() + "</td>" + "<td>" + job.getJobType() + "</td>" + "<td>" + set.getKey() + "</td>" + "<td>" + job.getApplicationTime() + "</td>" + "</tr>");
+                result.append(MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
+                                job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
             }
         }
 
@@ -135,29 +126,34 @@ public class Application {
                 + "</tr>"
                 + "</thead>"
                 + "<tbody>"
-                + content
+                + result
                 + "</tbody>"
                 + "</table>"
                 + "</body>"
                 + "</html>";
     }
 
-    private String exportCsv(LocalDate date) {
+    private List<JobApplication> getJobApplicationsOnDate(LocalDate date, List<JobApplication> jobApplications) {
+        return jobApplications.stream()
+                .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                .collect(Collectors.toList());
+    }
+
+    public String exportCsv(LocalDate date) {
         StringBuilder result = new StringBuilder("Employer,Job,Job Type,Applicants,Date" + "\n");
-        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
-            List<JobApplication> appliedJobs = set.getValue();
-            String appliedJobStr = appliedJobs.stream()
-                    .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
-                    .map(job -> job.getEmployerName() + "," + job.getJobName() + "," + job.getJobType() + "," + set.getKey() + "," + job.getApplicationTime() + "\n")
-                    .collect(Collectors.joining());
-            result.append(appliedJobStr);
+        for (Entry<String, List<JobApplication>> set : this.applied.entrySet()) {
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
+            for (JobApplication job : appliedOnDate) {
+                result.append(MessageFormat.format("{0},{1},{2},{3},{4}\n",
+                        job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
+            }
         }
         return result.toString();
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
         int result = 0;
-        for (Entry<String, List<JobApplication>> set : this.temp_applied.entrySet()) {
+        for (Entry<String, List<JobApplication>> set : this.applied.entrySet()) {
             List<JobApplication> jobs = set.getValue();
             result += jobs.stream().anyMatch(job -> job.getEmployerName().equals(employerName) && job.getJobName().equals(jobName)) ? 1 : 0;
         }
