@@ -320,7 +320,7 @@ public class ApplicationTest {
         application.apply(jobSeekerLam, null, new JobApplication(juniorJavaDevJob, "ATS", LocalDate.parse("1999-12-20"), employerAlibaba));
         application.apply(jobSeekerLam, lamResume, new JobApplication(seniorJavaDevJob, "JReq", LocalDate.parse("1999-12-20"), employerAlibaba));
 
-        String csv = application.export(LocalDate.parse("1999-12-20"));
+        String csv = application.exportHtml(LocalDate.parse("1999-12-20"));
         String expected = "<!DOCTYPE html>"
                 + "<body>"
                 + "<table>"
