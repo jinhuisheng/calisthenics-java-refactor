@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Application {
-    private final HashMap<String, List<Job>> employerPublishedJobs = new HashMap<>();
+    private final Employers employers = new Employers();
     private final HashMap<String, List<Job>> jobSeekerSavedJobs = new HashMap<>();
     final JobSeekers jobSeekers = new JobSeekers();
 
@@ -19,16 +19,11 @@ public class Application {
     }
 
     public void publish(String employerName, Job job) throws NotSupportedJobTypeException {
-        if (!job.getJobType().equals("JReq") && !job.getJobType().equals("ATS")) {
-            throw new NotSupportedJobTypeException();
-        }
-        List<Job> alreadyPublished = employerPublishedJobs.getOrDefault(employerName, new ArrayList<>());
-        alreadyPublished.add(job);
-        employerPublishedJobs.put(employerName, alreadyPublished);
+        employers.publish(employerName, job);
     }
 
     public List<Job> getJobs(String employerName) {
-        return employerPublishedJobs.get(employerName);
+        return employers.getJobs(employerName);
     }
 
     public List<Job> getJobSeekSavedJobs(String jobSeeker) {
@@ -46,6 +41,7 @@ public class Application {
     public String exportHtml(LocalDate date) {
         return jobSeekers.exportHtml(date);
     }
+
     public String exportCsv(LocalDate date) {
         return jobSeekers.exportCsv(date);
     }

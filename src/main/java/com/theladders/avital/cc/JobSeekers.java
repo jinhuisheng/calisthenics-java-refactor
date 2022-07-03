@@ -11,8 +11,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class JobSeekers {
-    public final HashMap<String, List<JobApplication>> jobSeekerApplications = new HashMap<>();
-    public final List<JobApplication> failedApplications = new ArrayList<>();
+    private final HashMap<String, List<JobApplication>> jobSeekerApplications = new HashMap<>();
+    private final List<JobApplication> failedApplications = new ArrayList<>();
 
     void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (jobApplication.getJobType().equals("JReq") && resumeApplicantName == null) {
