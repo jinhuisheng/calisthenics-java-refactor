@@ -15,12 +15,12 @@ public class JobSeekers {
     private final List<JobApplication> failedApplications = new ArrayList<>();
 
     void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        if (jobApplication.getJobType().equals("JReq") && resumeApplicantName == null) {
+        if (jobApplication.getJobType() == JobType.JReq && resumeApplicantName == null) {
             failedApplications.add(jobApplication);
             throw new RequiresResumeForJReqJobException();
         }
 
-        if (jobApplication.getJobType().equals("JReq") && !resumeApplicantName.equals(jobSeekerName)) {
+        if (jobApplication.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
         List<JobApplication> saved = jobSeekerApplications.getOrDefault(jobSeekerName, new ArrayList<>());
@@ -81,7 +81,7 @@ public class JobSeekers {
             List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
             for (JobApplication job : appliedOnDate) {
                 result.append(MessageFormat.format("{0},{1},{2},{3},{4}\n",
-                        job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
+                        job.getEmployerName(), job.getJobName(), job.getJobType().name(), set.getKey(), job.getApplicationTime()));
             }
         }
         return result.toString();
@@ -93,7 +93,7 @@ public class JobSeekers {
             List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
             for (JobApplication job : appliedOnDate) {
                 result.append(MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                        job.getEmployerName(), job.getJobName(), job.getJobType(), set.getKey(), job.getApplicationTime()));
+                        job.getEmployerName(), job.getJobName(), job.getJobType().name(), set.getKey(), job.getApplicationTime()));
             }
         }
 

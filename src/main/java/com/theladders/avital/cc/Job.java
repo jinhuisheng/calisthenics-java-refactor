@@ -4,28 +4,16 @@ import com.google.common.base.Objects;
 
 public class Job {
     private final String jobName;
-    private final String jobType;
+    private final JobType jobType;
 
-    public String getJobName() {
-        return jobName;
-    }
-
-    public String getJobType() {
-        return jobType;
-    }
-
-    public Job(String jobName, String jobType) {
+    public Job(String jobName, JobType jobType) {
 
         this.jobName = jobName;
         this.jobType = jobType;
     }
 
-    @Override
-    public String toString() {
-        return "Job{" +
-                "jobName='" + jobName + '\'' +
-                ", jobType='" + jobType + '\'' +
-                '}';
+    public JobType getJobType() {
+        return jobType;
     }
 
     @Override
@@ -33,11 +21,19 @@ public class Job {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Job job = (Job) o;
-        return Objects.equal(jobName, job.jobName) && Objects.equal(jobType, job.jobType);
+        return Objects.equal(jobName, job.jobName) && jobType == job.jobType;
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(jobName, jobType);
+    }
+
+    @Override
+    public String toString() {
+        return "Job{" +
+                "jobName='" + jobName + '\'' +
+                ", jobType=" + jobType +
+                '}';
     }
 }

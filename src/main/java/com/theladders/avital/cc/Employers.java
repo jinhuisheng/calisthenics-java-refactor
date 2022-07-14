@@ -12,7 +12,7 @@ public class Employers {
     }
 
     void publish(String employerName, Job job) throws NotSupportedJobTypeException {
-        if (!job.getJobType().equals("JReq") && !job.getJobType().equals("ATS")) {
+        if (job.getJobType() != JobType.JReq && job.getJobType() != JobType.ATS) {
             throw new NotSupportedJobTypeException();
         }
         List<Job> alreadyPublished = this.publishedJobs.getOrDefault(employerName, new ArrayList<>());

@@ -7,16 +7,12 @@ import java.time.format.DateTimeFormatter;
 
 public class JobApplication {
     private final String jobName;
-    private final String jobType;
     private final String applicationTime;
     private final String employerName;
+    private final JobType jobType;
 
     public String getJobName() {
         return jobName;
-    }
-
-    public String getJobType() {
-        return jobType;
     }
 
     public String getApplicationTime() {
@@ -27,13 +23,24 @@ public class JobApplication {
         return employerName;
     }
 
+    public JobType getJobType() {
+        return jobType;
+    }
+
+    public JobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
+        this.jobName = jobName;
+        this.applicationTime = applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.employerName = employerName;
+        this.jobType = jobType;
+    }
+
     @Override
     public String toString() {
         return "JobApplication{" +
                 "jobName='" + jobName + '\'' +
-                ", jobType='" + jobType + '\'' +
                 ", applicationTime='" + applicationTime + '\'' +
                 ", employerName='" + employerName + '\'' +
+                ", jobType_temp=" + jobType +
                 '}';
     }
 
@@ -42,26 +49,11 @@ public class JobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JobApplication that = (JobApplication) o;
-        return Objects.equal(jobName, that.jobName) && Objects.equal(jobType, that.jobType) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employerName, that.employerName);
+        return Objects.equal(jobName, that.jobName) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employerName, that.employerName) && jobType == that.jobType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(jobName, jobType, applicationTime, employerName);
-    }
-
-    public JobApplication(String jobName, String jobType, LocalDate applicationTime, String employerName) {
-        this.jobName = jobName;
-        this.jobType = jobType;
-        this.applicationTime = applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.employerName = employerName;
-    }
-
-    public JobApplication(String jobName, String jobType, String applicationTime, String employerName) {
-
-        this.jobName = jobName;
-        this.jobType = jobType;
-        this.applicationTime = applicationTime;
-        this.employerName = employerName;
+        return Objects.hashCode(jobName, applicationTime, employerName, jobType);
     }
 }
