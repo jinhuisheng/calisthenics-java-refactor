@@ -2,7 +2,6 @@ package com.theladders.avital.cc;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,18 +50,18 @@ public class JobSeekers {
             return job -> job.getJobName().equals(jobName);
         }
         if (jobName == null && to == null) {
-            return job -> !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !from.isAfter(job.getApplicationTime());
         }
         if (jobName == null && from == null) {
-            return job -> !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !to.isBefore(job.getApplicationTime());
         }
         if (jobName == null) {
-            return job -> !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))) && !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> !from.isAfter(job.getApplicationTime()) && !to.isBefore(job.getApplicationTime());
         }
         if (to != null) {
-            return job -> job.getJobName().equals(jobName) && !to.isBefore(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            return job -> job.getJobName().equals(jobName) && !to.isBefore(job.getApplicationTime());
         }
-        return job -> job.getJobName().equals(jobName) && !from.isAfter(LocalDate.parse(job.getApplicationTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        return job -> job.getJobName().equals(jobName) && !from.isAfter(job.getApplicationTime());
     }
 
     List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
@@ -71,7 +70,7 @@ public class JobSeekers {
 
     List<JobApplication> getJobApplicationsOnDate(LocalDate date, List<JobApplication> jobApplications) {
         return jobApplications.stream()
-                .filter(job -> job.getApplicationTime().equals(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                .filter(job -> job.getApplicationTime().equals(date))
                 .collect(Collectors.toList());
     }
 

@@ -3,20 +3,21 @@ package com.theladders.avital.cc;
 import com.google.common.base.Objects;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class JobApplication {
     private final String jobName;
-    private final String applicationTime;
+
+    private final LocalDate applicationTime;
+
     private final String employerName;
     private final JobType jobType;
 
-    public String getJobName() {
-        return jobName;
+    public LocalDate getApplicationTime() {
+        return applicationTime;
     }
 
-    public String getApplicationTime() {
-        return applicationTime;
+    public String getJobName() {
+        return jobName;
     }
 
     public String getEmployerName() {
@@ -29,18 +30,18 @@ public class JobApplication {
 
     public JobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
         this.jobName = jobName;
-        this.applicationTime = applicationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.employerName = employerName;
         this.jobType = jobType;
+        this.applicationTime = applicationTime;
     }
 
     @Override
     public String toString() {
         return "JobApplication{" +
                 "jobName='" + jobName + '\'' +
-                ", applicationTime='" + applicationTime + '\'' +
+                ", applicationTime_temp=" + applicationTime +
                 ", employerName='" + employerName + '\'' +
-                ", jobType_temp=" + jobType +
+                ", jobType=" + jobType +
                 '}';
     }
 
