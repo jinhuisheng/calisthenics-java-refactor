@@ -5,13 +5,11 @@ import java.util.*;
 
 public class Application {
     private final Employers employers = new Employers();
-    private final HashMap<String, List<Job>> jobSeekerSavedJobs = new HashMap<>();
+    private final SavedJobs savedJobs = new SavedJobs();
     final JobSeekers jobSeekers = new JobSeekers();
 
-    public void save(String jobSeeker, Job job) {
-        List<Job> alreadyPublished = jobSeekerSavedJobs.getOrDefault(jobSeeker, new ArrayList<>());
-        alreadyPublished.add(job);
-        jobSeekerSavedJobs.put(jobSeeker, alreadyPublished);
+    public void save(JobSeeker jobSeeker, Job job) {
+        savedJobs.save(jobSeeker, job);
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -27,7 +25,7 @@ public class Application {
     }
 
     public List<Job> getJobSeekSavedJobs(String jobSeeker) {
-        return jobSeekerSavedJobs.get(jobSeeker);
+        return savedJobs.getJobs(jobSeeker);
     }
 
     public List<JobApplication> getAppliedJobs(String jobSeekerName) {
