@@ -75,29 +75,28 @@ public class JobSeekers {
                 .collect(Collectors.toList());
     }
 
-    public String exportCsv(LocalDate date) {
-        StringBuilder result = new StringBuilder("Employer,Job,Job Type,Applicants,Date" + "\n");
+    public String exportCsv(LocalDate applicationTime) {
+        String header = "Employer,Job,Job Type,Applicants,Date" + "\n";
+        StringBuilder result = new StringBuilder(header);
         for (Map.Entry<String, List<JobApplication>> set : jobSeekerApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
+            String jobSeekerName = set.getKey();
             for (JobApplication job : appliedOnDate) {
-                result.append(MessageFormat.format("{0},{1},{2},{3},{4}\n",
-                        job.getEmployerName(), job.getJobName(), job.getJobType().name(), set.getKey(), job.getApplicationTime()));
+                String content = getCsvContentLine(jobSeekerName, job);
+                result.append(content);
             }
         }
         return result.toString();
     }
 
-    String exportHtml(LocalDate date) {
-        StringBuilder result = new StringBuilder();
-        for (Map.Entry<String, List<JobApplication>> set : jobSeekerApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(date, set.getValue());
-            for (JobApplication job : appliedOnDate) {
-                result.append(MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                        job.getEmployerName(), job.getJobName(), job.getJobType().name(), set.getKey(), job.getApplicationTime()));
-            }
-        }
+    private String getCsvContentLine(String key, JobApplication job) {
+        return MessageFormat.format("{0},{1},{2},{3},{4}\n",
+                job.getEmployerName(), job.getJobName(), job.getJobType().name(), key, job.getApplicationTime());
+    }
 
-        return "<!DOCTYPE html>"
+    String exportHtml(LocalDate applicationTime) {
+        StringBuilder result = new StringBuilder();
+        String header = "<!DOCTYPE html>"
                 + "<body>"
                 + "<table>"
                 + "<thead>"
@@ -109,12 +108,26 @@ public class JobSeekers {
                 + "<th>Date</th>"
                 + "</tr>"
                 + "</thead>"
-                + "<tbody>"
-                + result
-                + "</tbody>"
+                + "<tbody>";
+        for (Map.Entry<String, List<JobApplication>> set : jobSeekerApplications.entrySet()) {
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
+            String jobSeekerName = set.getKey();
+            for (JobApplication job : appliedOnDate) {
+                String content = getHtmlContentLine(jobSeekerName, job);
+                result.append(content);
+            }
+        }
+
+        String footer = "</tbody>"
                 + "</table>"
                 + "</body>"
                 + "</html>";
+        return header + result + footer;
+    }
+
+    private String getHtmlContentLine(String key, JobApplication job) {
+        return MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
+                job.getEmployerName(), job.getJobName(), job.getJobType().name(), key, job.getApplicationTime());
     }
 
     int getSuccessfulApplications(String employerName, String jobName) {

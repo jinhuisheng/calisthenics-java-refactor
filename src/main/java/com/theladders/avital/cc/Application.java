@@ -38,12 +38,11 @@ public class Application {
         return jobSeekers.findApplicants(jobName, from, to);
     }
 
-    public String exportHtml(LocalDate date) {
-        return jobSeekers.exportHtml(date);
-    }
-
-    public String exportCsv(LocalDate date) {
-        return jobSeekers.exportCsv(date);
+    public String export(LocalDate applicationTime, ExportType exportType) {
+        if (exportType == ExportType.csv) {
+            return jobSeekers.exportCsv(applicationTime);
+        }
+        return jobSeekers.exportHtml(applicationTime);
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
