@@ -57,4 +57,12 @@ public class JobApplication {
     public int hashCode() {
         return Objects.hashCode(jobName, applicationTime, employerName, jobType);
     }
+
+    boolean isEqualOrAfter(LocalDate from) {
+        return !from.isAfter(getApplicationTime());
+    }
+
+    boolean isEqualOrBefore(LocalDate to) {
+        return !to.isBefore(getApplicationTime());
+    }
 }

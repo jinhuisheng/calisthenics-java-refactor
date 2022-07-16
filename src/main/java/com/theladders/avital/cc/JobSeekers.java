@@ -46,22 +46,17 @@ public class JobSeekers {
     }
 
     Predicate<JobApplication> queryCondition(String jobName, LocalDate from, LocalDate to) {
-        if (from == null && to == null) {
-            return job -> job.getJobName().equals(jobName);
-        }
-        if (jobName == null && to == null) {
-            return job -> !from.isAfter(job.getApplicationTime());
-        }
-        if (jobName == null && from == null) {
-            return job -> !to.isBefore(job.getApplicationTime());
-        }
-        if (jobName == null) {
-            return job -> !from.isAfter(job.getApplicationTime()) && !to.isBefore(job.getApplicationTime());
+        Predicate<JobApplication> predicate = job -> true;
+        if (from != null) {
+            predicate = predicate.and(job -> job.isEqualOrAfter(from));
         }
         if (to != null) {
-            return job -> job.getJobName().equals(jobName) && !to.isBefore(job.getApplicationTime());
+            predicate = predicate.and(job -> job.isEqualOrBefore(to));
         }
-        return job -> job.getJobName().equals(jobName) && !from.isAfter(job.getApplicationTime());
+        if (jobName != null) {
+            predicate = predicate.and(job -> job.getJobName().equals(jobName));
+        }
+        return predicate;
     }
 
     List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
