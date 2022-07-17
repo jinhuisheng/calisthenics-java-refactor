@@ -5,43 +5,36 @@ import com.google.common.base.Objects;
 import java.time.LocalDate;
 
 public class AppliedJobApplication {
-    private final String jobName;
+    private final Job job;
 
     private final LocalDate applicationTime;
 
     private final String employerName;
-    private final JobType jobType;
+
+    public Job getJob() {
+        return job;
+    }
 
     public LocalDate getApplicationTime() {
         return applicationTime;
-    }
-
-    public String getJobName() {
-        return jobName;
     }
 
     public String getEmployerName() {
         return employerName;
     }
 
-    public JobType getJobType() {
-        return jobType;
-    }
-
     public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
-        this.jobName = jobName;
         this.employerName = employerName;
-        this.jobType = jobType;
         this.applicationTime = applicationTime;
+        this.job = new Job(jobName, jobType);
     }
 
     @Override
     public String toString() {
-        return "JobApplication{" +
-                "jobName='" + jobName + '\'' +
-                ", applicationTime_temp=" + applicationTime +
+        return "AppliedJobApplication{" +
+                "job=" + job +
+                ", applicationTime=" + applicationTime +
                 ", employerName='" + employerName + '\'' +
-                ", jobType=" + jobType +
                 '}';
     }
 
@@ -50,12 +43,12 @@ public class AppliedJobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppliedJobApplication that = (AppliedJobApplication) o;
-        return Objects.equal(jobName, that.jobName) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employerName, that.employerName) && jobType == that.jobType;
+        return Objects.equal(job, that.job) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employerName, that.employerName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(jobName, applicationTime, employerName, jobType);
+        return Objects.hashCode(job, applicationTime, employerName);
     }
 
     boolean isEqualOrAfter(LocalDate from) {
