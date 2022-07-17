@@ -29,7 +29,7 @@ public class AppliedJobApplications {
     int getSuccessfulApplications(String employerName, String jobName) {
         return (int) appliedApplications.entrySet().stream()
                 .filter(entry -> entry.getValue().stream()
-                        .anyMatch(job -> job.getEmployerName().equals(employerName) && job.getJob().getJobName().equals(jobName))
+                        .anyMatch(job -> job.getEmployer().getName().equals(employerName) && job.getJob().getJobName().equals(jobName))
                 ).count();
     }
 
@@ -63,7 +63,7 @@ public class AppliedJobApplications {
 
     private String getCsvContentLine(String key, AppliedJobApplication job) {
         return MessageFormat.format("{0},{1},{2},{3},{4}\n",
-                job.getEmployerName(), job.getJob().getJobName(), job.getJob().getJobType().name(), key, job.getApplicationTime());
+                job.getEmployer().getName(), job.getJob().getJobName(), job.getJob().getJobType().name(), key, job.getApplicationTime());
     }
 
     String exportHtml(LocalDate applicationTime) {
@@ -99,7 +99,7 @@ public class AppliedJobApplications {
 
     private String getHtmlContentLine(String key, AppliedJobApplication job) {
         return MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                job.getEmployerName(), job.getJob().getJobName(), job.getJob().getJobType().name(), key, job.getApplicationTime());
+                job.getEmployer().getName(), job.getJob().getJobName(), job.getJob().getJobType().name(), key, job.getApplicationTime());
     }
 
     List<AppliedJobApplication> getJobApplicationsOnDate(LocalDate date, List<AppliedJobApplication> jobApplications) {

@@ -9,7 +9,11 @@ public class AppliedJobApplication {
 
     private final LocalDate applicationTime;
 
-    private final String employerName;
+    private final Employer employer;
+
+    public Employer getEmployer() {
+        return employer;
+    }
 
     public Job getJob() {
         return job;
@@ -19,23 +23,10 @@ public class AppliedJobApplication {
         return applicationTime;
     }
 
-    public String getEmployerName() {
-        return employerName;
-    }
-
     public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
-        this.employerName = employerName;
         this.applicationTime = applicationTime;
         this.job = new Job(jobName, jobType);
-    }
-
-    @Override
-    public String toString() {
-        return "AppliedJobApplication{" +
-                "job=" + job +
-                ", applicationTime=" + applicationTime +
-                ", employerName='" + employerName + '\'' +
-                '}';
+        this.employer = new Employer(employerName);
     }
 
     @Override
@@ -43,12 +34,21 @@ public class AppliedJobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppliedJobApplication that = (AppliedJobApplication) o;
-        return Objects.equal(job, that.job) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employerName, that.employerName);
+        return Objects.equal(job, that.job) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employer, that.employer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(job, applicationTime, employerName);
+        return Objects.hashCode(job, applicationTime, employer);
+    }
+
+    @Override
+    public String toString() {
+        return "AppliedJobApplication{" +
+                "job=" + job +
+                ", applicationTime=" + applicationTime +
+                ", employer=" + employer +
+                '}';
     }
 
     boolean isEqualOrAfter(LocalDate from) {
