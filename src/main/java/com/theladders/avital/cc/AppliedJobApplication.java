@@ -5,18 +5,13 @@ import com.google.common.base.Objects;
 import java.time.LocalDate;
 
 public class AppliedJobApplication {
-    private final Job job;
+
+    private final PublishedJob publishedJob;
 
     private final LocalDate applicationTime;
 
-    private final Employer employer;
-
-    public Employer getEmployer() {
-        return employer;
-    }
-
-    public Job getJob() {
-        return job;
+    public PublishedJob getPublishedJob() {
+        return publishedJob;
     }
 
     public LocalDate getApplicationTime() {
@@ -25,8 +20,7 @@ public class AppliedJobApplication {
 
     public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
         this.applicationTime = applicationTime;
-        this.job = new Job(jobName, jobType);
-        this.employer = new Employer(employerName);
+        this.publishedJob = new PublishedJob(new Job(jobName, jobType), new Employer(employerName));
     }
 
     @Override
@@ -34,20 +28,19 @@ public class AppliedJobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppliedJobApplication that = (AppliedJobApplication) o;
-        return Objects.equal(job, that.job) && Objects.equal(applicationTime, that.applicationTime) && Objects.equal(employer, that.employer);
+        return Objects.equal(publishedJob, that.publishedJob) && Objects.equal(applicationTime, that.applicationTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(job, applicationTime, employer);
+        return Objects.hashCode(publishedJob, applicationTime);
     }
 
     @Override
     public String toString() {
         return "AppliedJobApplication{" +
-                "job=" + job +
+                "publishedJob=" + publishedJob +
                 ", applicationTime=" + applicationTime +
-                ", employer=" + employer +
                 '}';
     }
 
