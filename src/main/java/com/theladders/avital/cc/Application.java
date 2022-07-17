@@ -4,12 +4,11 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Application {
-    private final Employers employers = new Employers();
-    private final SavedJobs savedJobs = new SavedJobs();
+    private final Jobs jobs = new Jobs();
     final JobSeekers jobSeekers = new JobSeekers();
 
     public void save(JobSeeker jobSeeker, Job job) {
-        savedJobs.save(jobSeeker, job);
+        jobs.save(jobSeeker, job);
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -17,15 +16,15 @@ public class Application {
     }
 
     public void publish(String employerName, Job job) throws NotSupportedJobTypeException {
-        employers.publish(employerName, job);
+        jobs.publish(employerName, job);
     }
 
     public List<Job> getJobs(String employerName) {
-        return employers.getJobs(employerName);
+        return jobs.getJobs(employerName);
     }
 
-    public List<Job> getJobSeekSavedJobs(String jobSeeker) {
-        return savedJobs.getJobs(jobSeeker);
+    public List<Job> getJobSeekSavedJobs(JobSeeker jobSeeker) {
+        return jobs.getJobs(jobSeeker);
     }
 
     public List<JobApplication> getAppliedJobs(String jobSeekerName) {
