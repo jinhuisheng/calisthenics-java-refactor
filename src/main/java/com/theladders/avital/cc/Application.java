@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Application {
     private final Jobs jobs = new Jobs();
-    final JobSeekers jobSeekers = new JobSeekers();
+    private final JobSeekers jobSeekers = new JobSeekers();
 
     public void save(JobSeeker jobSeeker, Job job) {
         jobs.save(jobSeeker, job);
@@ -15,12 +15,12 @@ public class Application {
         jobSeekers.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
-    public void publish(String employerName, Job job) throws NotSupportedJobTypeException {
-        jobs.publish(employerName, job);
+    public void publish(Employer employer, Job job) throws NotSupportedJobTypeException {
+        jobs.publish(job, employer);
     }
 
-    public List<Job> getJobs(String employerName) {
-        return jobs.getJobs(employerName);
+    public List<Job> getJobs(Employer employer) {
+        return jobs.getJobs(employer);
     }
 
     public List<Job> getJobSeekSavedJobs(JobSeeker jobSeeker) {

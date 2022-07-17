@@ -5,30 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Jobs {
-    private final HashMap<JobSeeker, List<Job>> jobSeekerSavedJobs = new HashMap<>();
+    private final HashMap<JobSeeker, List<Job>> savedJobs = new HashMap<>();
 
-    private final HashMap<String, List<Job>> publishedJobs = new HashMap<>();
+    private final HashMap<Employer, List<Job>> publishedJobs = new HashMap<>();
 
-    List<Job> getJobs(String employerName) {
-        return this.publishedJobs.get(employerName);
-    }
-
-    void publish(String employerName, Job job) throws NotSupportedJobTypeException {
+    void publish(Job job, Employer employer) throws NotSupportedJobTypeException {
         if (job.getJobType() != JobType.JReq && job.getJobType() != JobType.ATS) {
             throw new NotSupportedJobTypeException();
         }
-        List<Job> alreadyPublished = this.publishedJobs.getOrDefault(employerName, new ArrayList<>());
-        alreadyPublished.add(job);
-        this.publishedJobs.put(employerName, alreadyPublished);
+        List<Job> alreadyPublished_temp = publishedJobs.getOrDefault(employer, new ArrayList<>());
+        alreadyPublished_temp.add(job);
+        publishedJobs.put(employer, alreadyPublished_temp);
     }
 
     void save(JobSeeker jobSeeker, Job job) {
-        List<Job> alreadyPublished_temp = jobSeekerSavedJobs.getOrDefault(jobSeeker, new ArrayList<>());
+        List<Job> alreadyPublished_temp = savedJobs.getOrDefault(jobSeeker, new ArrayList<>());
         alreadyPublished_temp.add(job);
-        jobSeekerSavedJobs.put(jobSeeker, alreadyPublished_temp);
+        savedJobs.put(jobSeeker, alreadyPublished_temp);
+    }
+
+    List<Job> getJobs(Employer employer) {
+        return this.publishedJobs.get(employer);
     }
 
     List<Job> getJobs(JobSeeker jobSeeker) {
-        return jobSeekerSavedJobs.get(jobSeeker);
+        return savedJobs.get(jobSeeker);
     }
 }
