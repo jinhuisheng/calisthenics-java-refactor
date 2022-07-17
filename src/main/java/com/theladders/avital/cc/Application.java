@@ -27,7 +27,7 @@ public class Application {
         return jobs.getJobs(jobSeeker);
     }
 
-    public List<JobApplication> getAppliedJobs(String jobSeekerName) {
+    public List<AppliedJobApplication> getAppliedJobs(String jobSeekerName) {
         return jobApplications.getJobApplications(jobSeekerName);
     }
 

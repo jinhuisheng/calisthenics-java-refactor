@@ -88,10 +88,10 @@ public class ApplicationTest {
         application.publish(new Employer(employerAlibaba), new Job(juniorJavaDevJob, JobType.ATS));
         application.apply(jobSeekerName, null, new JobApplication(juniorJavaDevJob, LocalDate.parse("2020-01-01"), employerAlibaba, JobType.ATS));
         application.apply(jobSeekerName, null, new JobApplication(seniorJavaDevJob, LocalDate.parse("2020-01-01"), employerAlibaba, JobType.ATS));
-        List<JobApplication> appliedJobs = application.getAppliedJobs(jobSeekerName);
+        List<AppliedJobApplication> appliedJobs = application.getAppliedJobs(jobSeekerName);
         assertThat(appliedJobs, is(Arrays.asList(
-                new JobApplication("Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS),
-                new JobApplication("高级Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS)
+                new AppliedJobApplication("Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS),
+                new AppliedJobApplication("高级Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS)
         )));
     }
 

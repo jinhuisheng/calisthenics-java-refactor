@@ -10,18 +10,19 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AppliedJobApplications {
-    private final HashMap<String, List<JobApplication>> appliedApplications = new HashMap<>();
+    private final HashMap<String, List<AppliedJobApplication>> appliedApplications = new HashMap<>();
 
     void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws InvalidResumeException {
         if (jobApplication.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
-        List<JobApplication> saved = appliedApplications.getOrDefault(jobSeekerName, new ArrayList<>());
-        saved.add(jobApplication);
+        List<AppliedJobApplication> saved = appliedApplications.getOrDefault(jobSeekerName, new ArrayList<>());
+        AppliedJobApplication appliedJobApplication = new AppliedJobApplication(jobApplication.getJobName(), jobApplication.getApplicationTime(), jobApplication.getEmployerName(), jobApplication.getJobType());
+        saved.add(appliedJobApplication);
         appliedApplications.put(jobSeekerName, saved);
     }
 
-    List<JobApplication> getJobApplications(String jobSeekerName) {
+    List<AppliedJobApplication> getJobApplications(String jobSeekerName) {
         return appliedApplications.get(jobSeekerName);
     }
 
@@ -32,12 +33,12 @@ public class AppliedJobApplications {
                 ).count();
     }
 
-    List<String> findApplicants(Predicate<JobApplication> predicate) {
+    List<String> findApplicants(Predicate<AppliedJobApplication> predicate) {
         List<String> result = new ArrayList<String>() {
         };
-        for (Map.Entry<String, List<JobApplication>> set : appliedApplications.entrySet()) {
+        for (Map.Entry<String, List<AppliedJobApplication>> set : appliedApplications.entrySet()) {
             String applicant = set.getKey();
-            List<JobApplication> jobs = set.getValue();
+            List<AppliedJobApplication> jobs = set.getValue();
             boolean hasAppliedToThisJob = jobs.stream().anyMatch(predicate);
             if (hasAppliedToThisJob) {
                 result.add(applicant);
@@ -49,10 +50,10 @@ public class AppliedJobApplications {
     String exportCsv(LocalDate applicationTime) {
         String header = "Employer,Job,Job Type,Applicants,Date" + "\n";
         StringBuilder result = new StringBuilder(header);
-        for (Map.Entry<String, List<JobApplication>> set : appliedApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
+        for (Map.Entry<String, List<AppliedJobApplication>> set : appliedApplications.entrySet()) {
+            List<AppliedJobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
             String jobSeekerName = set.getKey();
-            for (JobApplication job : appliedOnDate) {
+            for (AppliedJobApplication job : appliedOnDate) {
                 String content = getCsvContentLine(jobSeekerName, job);
                 result.append(content);
             }
@@ -60,7 +61,7 @@ public class AppliedJobApplications {
         return result.toString();
     }
 
-    private String getCsvContentLine(String key, JobApplication job) {
+    private String getCsvContentLine(String key, AppliedJobApplication job) {
         return MessageFormat.format("{0},{1},{2},{3},{4}\n",
                 job.getEmployerName(), job.getJobName(), job.getJobType().name(), key, job.getApplicationTime());
     }
@@ -80,10 +81,10 @@ public class AppliedJobApplications {
                 + "</tr>"
                 + "</thead>"
                 + "<tbody>";
-        for (Map.Entry<String, List<JobApplication>> set : appliedApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
+        for (Map.Entry<String, List<AppliedJobApplication>> set : appliedApplications.entrySet()) {
+            List<AppliedJobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
             String jobSeekerName = set.getKey();
-            for (JobApplication job : appliedOnDate) {
+            for (AppliedJobApplication job : appliedOnDate) {
                 String content = getHtmlContentLine(jobSeekerName, job);
                 result.append(content);
             }
@@ -96,19 +97,19 @@ public class AppliedJobApplications {
         return header + result + footer;
     }
 
-    private String getHtmlContentLine(String key, JobApplication job) {
+    private String getHtmlContentLine(String key, AppliedJobApplication job) {
         return MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
                 job.getEmployerName(), job.getJobName(), job.getJobType().name(), key, job.getApplicationTime());
     }
 
-    List<JobApplication> getJobApplicationsOnDate(LocalDate date, List<JobApplication> jobApplications) {
+    List<AppliedJobApplication> getJobApplicationsOnDate(LocalDate date, List<AppliedJobApplication> jobApplications) {
         return jobApplications.stream()
                 .filter(job -> job.getApplicationTime().equals(date))
                 .collect(Collectors.toList());
     }
 
-    Predicate<JobApplication> queryCondition(String jobName, LocalDate from, LocalDate to) {
-        Predicate<JobApplication> predicate = job -> true;
+    Predicate<AppliedJobApplication> queryCondition(String jobName, LocalDate from, LocalDate to) {
+        Predicate<AppliedJobApplication> predicate = job -> true;
         if (from != null) {
             predicate = predicate.and(job -> job.isEqualOrAfter(from));
         }

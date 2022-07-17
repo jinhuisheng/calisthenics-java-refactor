@@ -16,7 +16,7 @@ public class JobApplications {
         appliedApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
-    List<JobApplication> getJobApplications(String jobSeekerName) {
+    List<AppliedJobApplication> getJobApplications(String jobSeekerName) {
         return appliedApplications.getJobApplications(jobSeekerName);
     }
 
