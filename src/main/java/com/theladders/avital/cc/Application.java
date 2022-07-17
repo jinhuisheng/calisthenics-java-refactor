@@ -5,14 +5,14 @@ import java.util.*;
 
 public class Application {
     private final Jobs jobs = new Jobs();
-    private final JobSeekers jobSeekers = new JobSeekers();
+    private final JobApplications jobApplications = new JobApplications();
 
     public void save(JobSeeker jobSeeker, Job job) {
         jobs.save(jobSeeker, job);
     }
 
     public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobSeekers.apply(jobSeekerName, resumeApplicantName, jobApplication);
+        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
     }
 
     public void publish(Employer employer, Job job) throws NotSupportedJobTypeException {
@@ -28,26 +28,26 @@ public class Application {
     }
 
     public List<JobApplication> getAppliedJobs(String jobSeekerName) {
-        return jobSeekers.getJobApplications(jobSeekerName);
+        return jobApplications.getJobApplications(jobSeekerName);
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        return jobSeekers.findApplicants(jobName, from, to);
+        return jobApplications.findApplicants(jobName, from, to);
     }
 
     public String export(LocalDate applicationTime, ExportType exportType) {
         if (exportType == ExportType.csv) {
-            return jobSeekers.exportCsv(applicationTime);
+            return jobApplications.exportCsv(applicationTime);
         }
-        return jobSeekers.exportHtml(applicationTime);
+        return jobApplications.exportHtml(applicationTime);
     }
 
     public int getSuccessfulApplications(String employerName, String jobName) {
-        return jobSeekers.getSuccessfulApplications(employerName, jobName);
+        return jobApplications.getSuccessfulApplications(employerName, jobName);
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return jobSeekers.getUnsuccessfulApplications(employerName, jobName);
+        return jobApplications.getUnsuccessfulApplications(employerName, jobName);
     }
 
 }
