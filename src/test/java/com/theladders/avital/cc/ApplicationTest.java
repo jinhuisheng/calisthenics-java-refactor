@@ -90,8 +90,8 @@ public class ApplicationTest {
         application.apply(jobSeekerName, null, new JobApplication(seniorJavaDevJob, LocalDate.parse("2020-01-01"), employerAlibaba, JobType.ATS));
         List<AppliedJobApplication> appliedJobs = application.getAppliedJobs(jobSeekerName);
         assertThat(appliedJobs, is(Arrays.asList(
-                new AppliedJobApplication("Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS),
-                new AppliedJobApplication("高级Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS)
+                new AppliedJobApplication("Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS, new JobSeeker(jobSeekerName)),
+                new AppliedJobApplication("高级Java开发", LocalDate.parse("2020-01-01"), "Alibaba", JobType.ATS, new JobSeeker(jobSeekerName))
         )));
     }
 

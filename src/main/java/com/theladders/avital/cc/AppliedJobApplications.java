@@ -11,26 +11,27 @@ import java.util.stream.Collectors;
 
 public class AppliedJobApplications {
     private final HashMap<String, List<AppliedJobApplication>> appliedApplications = new HashMap<>();
+    private final List<AppliedJobApplication> temp_appliedApplications = new ArrayList<>();
 
     void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws InvalidResumeException {
         if (jobApplication.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeekerName)) {
             throw new InvalidResumeException();
         }
         List<AppliedJobApplication> saved = appliedApplications.getOrDefault(jobSeekerName, new ArrayList<>());
-        AppliedJobApplication appliedJobApplication = new AppliedJobApplication(jobApplication.getJobName(), jobApplication.getApplicationTime(), jobApplication.getEmployerName(), jobApplication.getJobType());
+        AppliedJobApplication appliedJobApplication = new AppliedJobApplication(jobApplication.getJobName(), jobApplication.getApplicationTime(), jobApplication.getEmployerName(), jobApplication.getJobType(), new JobSeeker(jobSeekerName));
         saved.add(appliedJobApplication);
         appliedApplications.put(jobSeekerName, saved);
+        temp_appliedApplications.add(appliedJobApplication);
     }
 
     List<AppliedJobApplication> getJobApplications(String jobSeekerName) {
-        return appliedApplications.get(jobSeekerName);
+        return temp_appliedApplications.stream().filter(temp_appliedApplication -> temp_appliedApplication.getJobSeeker().equals(new JobSeeker(jobSeekerName))).collect(Collectors.toList());
     }
 
     int getSuccessfulApplications(String employerName, String jobName) {
-        return (int) appliedApplications.entrySet().stream()
-                .filter(entry -> entry.getValue().stream()
-                        .anyMatch(job -> job.getPublishedJob().getEmployer().getName().equals(employerName) && job.getPublishedJob().getJob().getJobName().equals(jobName))
-                ).count();
+        return (int) temp_appliedApplications.stream()
+                .filter(job -> job.getPublishedJob().getEmployer().getName().equals(employerName) && job.getPublishedJob().getJob().getJobName().equals(jobName))
+                .count();
     }
 
     List<String> findApplicants(Predicate<AppliedJobApplication> predicate) {

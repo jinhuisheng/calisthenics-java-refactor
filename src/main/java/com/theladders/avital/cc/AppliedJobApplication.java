@@ -10,6 +10,8 @@ public class AppliedJobApplication {
 
     private final LocalDate applicationTime;
 
+    private final JobSeeker jobSeeker;
+
     public PublishedJob getPublishedJob() {
         return publishedJob;
     }
@@ -18,9 +20,10 @@ public class AppliedJobApplication {
         return applicationTime;
     }
 
-    public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType) {
+    public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType, JobSeeker jobSeeker) {
         this.applicationTime = applicationTime;
         this.publishedJob = new PublishedJob(new Job(jobName, jobType), new Employer(employerName));
+        this.jobSeeker = jobSeeker;
     }
 
     @Override
@@ -50,5 +53,9 @@ public class AppliedJobApplication {
 
     boolean isEqualOrBefore(LocalDate to) {
         return !to.isBefore(getApplicationTime());
+    }
+
+    public JobSeeker getJobSeeker() {
+        return jobSeeker;
     }
 }
