@@ -25,11 +25,11 @@ public class JobApplications {
     }
 
     public String exportCsv(LocalDate applicationTime) {
-        return appliedApplications.exportCsv(applicationTime, this);
+        return appliedApplications.exportCsv(applicationTime);
     }
 
     String exportHtml(LocalDate applicationTime) {
-        return appliedApplications.exportHtml(applicationTime, this);
+        return appliedApplications.exportHtml(applicationTime);
     }
 
     int getSuccessfulApplications(String employerName, String jobName) {

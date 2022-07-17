@@ -46,11 +46,11 @@ public class AppliedJobApplications {
         return result;
     }
 
-    String exportCsv(LocalDate applicationTime, JobApplications jobApplications) {
+    String exportCsv(LocalDate applicationTime) {
         String header = "Employer,Job,Job Type,Applicants,Date" + "\n";
         StringBuilder result = new StringBuilder(header);
         for (Map.Entry<String, List<JobApplication>> set : appliedApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = jobApplications.appliedApplications.getJobApplicationsOnDate(applicationTime, set.getValue());
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
             String jobSeekerName = set.getKey();
             for (JobApplication job : appliedOnDate) {
                 String content = getCsvContentLine(jobSeekerName, job);
@@ -65,7 +65,7 @@ public class AppliedJobApplications {
                 job.getEmployerName(), job.getJobName(), job.getJobType().name(), key, job.getApplicationTime());
     }
 
-    String exportHtml(LocalDate applicationTime, JobApplications jobApplications) {
+    String exportHtml(LocalDate applicationTime) {
         StringBuilder result = new StringBuilder();
         String header = "<!DOCTYPE html>"
                 + "<body>"
@@ -81,7 +81,7 @@ public class AppliedJobApplications {
                 + "</thead>"
                 + "<tbody>";
         for (Map.Entry<String, List<JobApplication>> set : appliedApplications.entrySet()) {
-            List<JobApplication> appliedOnDate = jobApplications.appliedApplications.getJobApplicationsOnDate(applicationTime, set.getValue());
+            List<JobApplication> appliedOnDate = getJobApplicationsOnDate(applicationTime, set.getValue());
             String jobSeekerName = set.getKey();
             for (JobApplication job : appliedOnDate) {
                 String content = getHtmlContentLine(jobSeekerName, job);
