@@ -8,22 +8,23 @@ public class AppliedJobApplication {
 
     private final PublishedJob publishedJob;
 
-    private final LocalDate applicationTime;
-
-    private final JobSeeker jobSeeker;
+    private final ApplicationInfo applicationInfo;
 
     public PublishedJob getPublishedJob() {
         return publishedJob;
     }
 
-    public LocalDate getApplicationTime() {
-        return applicationTime;
+    public AppliedJobApplication(LocalDate applicationTime, JobSeeker jobSeeker, PublishedJob publishedJob) {
+        this.publishedJob = publishedJob;
+        this.applicationInfo = new ApplicationInfo(jobSeeker, applicationTime);
     }
 
-    public AppliedJobApplication(LocalDate applicationTime, JobSeeker jobSeeker, PublishedJob publishedJob) {
-        this.applicationTime = applicationTime;
-        this.publishedJob = publishedJob;
-        this.jobSeeker = jobSeeker;
+    @Override
+    public String toString() {
+        return "AppliedJobApplication{" +
+                "publishedJob=" + publishedJob +
+                ", applicationInfo=" + applicationInfo +
+                '}';
     }
 
     @Override
@@ -31,31 +32,23 @@ public class AppliedJobApplication {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AppliedJobApplication that = (AppliedJobApplication) o;
-        return Objects.equal(publishedJob, that.publishedJob) && Objects.equal(applicationTime, that.applicationTime);
+        return Objects.equal(publishedJob, that.publishedJob) && Objects.equal(applicationInfo, that.applicationInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(publishedJob, applicationTime);
-    }
-
-    @Override
-    public String toString() {
-        return "AppliedJobApplication{" +
-                "publishedJob=" + publishedJob +
-                ", applicationTime=" + applicationTime +
-                '}';
+        return Objects.hashCode(publishedJob, applicationInfo);
     }
 
     boolean isEqualOrAfter(LocalDate from) {
-        return !from.isAfter(getApplicationTime());
+        return !from.isAfter(this.applicationInfo.getApplicationTime());
     }
 
     boolean isEqualOrBefore(LocalDate to) {
-        return !to.isBefore(getApplicationTime());
+        return !to.isBefore(this.applicationInfo.getApplicationTime());
     }
 
-    public JobSeeker getJobSeeker() {
-        return jobSeeker;
+    public ApplicationInfo getApplicationInfo() {
+        return applicationInfo;
     }
 }

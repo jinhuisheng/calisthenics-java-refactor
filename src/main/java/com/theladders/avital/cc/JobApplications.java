@@ -11,11 +11,15 @@ public class JobApplications {
     void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (job.getJobType() == JobType.JReq && resumeApplicantName == null) {
-            FailedApplication failedApplication = new FailedApplication(applicationTime, job, employer);
-            failedApplications.add(failedApplication);
+            addFailedApplications(job, employer, applicationTime);
             throw new RequiresResumeForJReqJobException();
         }
         appliedApplications.apply(resumeApplicantName, jobSeeker, job, employer, applicationTime);
+    }
+
+    private void addFailedApplications(Job job, Employer employer, LocalDate applicationTime) {
+        FailedApplication failedApplication = new FailedApplication(applicationTime, job, employer);
+        failedApplications.add(failedApplication);
     }
 
     List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {

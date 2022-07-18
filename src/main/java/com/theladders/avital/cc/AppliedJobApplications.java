@@ -13,13 +13,17 @@ public class AppliedJobApplications {
         if (job.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeeker.getName())) {
             throw new InvalidResumeException();
         }
+        addApplication(jobSeeker, job, employer, applicationTime);
+    }
+
+    private void addApplication(JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime) {
         AppliedJobApplication appliedJobApplication = new AppliedJobApplication(applicationTime, jobSeeker, new PublishedJob(job, employer));
         appliedApplications.add(appliedJobApplication);
     }
 
     List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
         return appliedApplications.stream()
-                .filter(jobApplication -> jobApplication.getJobSeeker().equals(jobSeeker))
+                .filter(jobApplication -> jobApplication.getApplicationInfo().getJobSeeker().equals(jobSeeker))
                 .collect(Collectors.toList());
     }
 
@@ -32,7 +36,7 @@ public class AppliedJobApplications {
     List<String> findApplicants(Predicate<AppliedJobApplication> predicate) {
         return appliedApplications.stream()
                 .filter(predicate)
-                .map(appliedJobApplication -> appliedJobApplication.getJobSeeker().getName())
+                .map(appliedJobApplication -> appliedJobApplication.getApplicationInfo().getJobSeeker().getName())
                 .distinct()
                 .sorted()
                 .collect(Collectors.toList());
@@ -42,8 +46,8 @@ public class AppliedJobApplications {
         String header = "Employer,Job,Job Type,Applicants,Date" + "\n";
         StringBuilder result = new StringBuilder(header);
         appliedApplications.stream()
-                .filter(job -> job.getApplicationTime().equals(applicationTime))
-                .collect(Collectors.groupingBy(appliedJobApplication -> appliedJobApplication.getJobSeeker().getName())).entrySet().stream()
+                .filter(job -> job.getApplicationInfo().getApplicationTime().equals(applicationTime))
+                .collect(Collectors.groupingBy(appliedJobApplication -> appliedJobApplication.getApplicationInfo().getJobSeeker().getName())).entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .flatMap(item -> item.getValue().stream())
                 .forEach(appliedJobApplication -> {
@@ -55,7 +59,7 @@ public class AppliedJobApplications {
 
     private String getCsvContentLine(AppliedJobApplication job) {
         return MessageFormat.format("{0},{1},{2},{3},{4}\n",
-                job.getPublishedJob().getEmployer().getName(), job.getPublishedJob().getJob().getJobName(), job.getPublishedJob().getJob().getJobType().name(), job.getJobSeeker().getName(), job.getApplicationTime());
+                job.getPublishedJob().getEmployer().getName(), job.getPublishedJob().getJob().getJobName(), job.getPublishedJob().getJob().getJobType().name(), job.getApplicationInfo().getJobSeeker().getName(), job.getApplicationInfo().getApplicationTime());
     }
 
     String exportHtml(LocalDate applicationTime) {
@@ -74,8 +78,8 @@ public class AppliedJobApplications {
                 + "</thead>"
                 + "<tbody>";
         appliedApplications.stream()
-                .filter(job -> job.getApplicationTime().equals(applicationTime))
-                .collect(Collectors.groupingBy(appliedJobApplication -> appliedJobApplication.getJobSeeker().getName())).entrySet().stream()
+                .filter(job -> job.getApplicationInfo().getApplicationTime().equals(applicationTime))
+                .collect(Collectors.groupingBy(appliedJobApplication -> appliedJobApplication.getApplicationInfo().getJobSeeker().getName())).entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .flatMap(item -> item.getValue().stream())
                 .forEach(appliedJobApplication -> result.append(getHtmlContentLine(appliedJobApplication)));
@@ -88,7 +92,7 @@ public class AppliedJobApplications {
 
     private String getHtmlContentLine(AppliedJobApplication job) {
         return MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                job.getPublishedJob().getEmployer().getName(), job.getPublishedJob().getJob().getJobName(), job.getPublishedJob().getJob().getJobType().name(), job.getJobSeeker().getName(), job.getApplicationTime());
+                job.getPublishedJob().getEmployer().getName(), job.getPublishedJob().getJob().getJobName(), job.getPublishedJob().getJob().getJobType().name(), job.getApplicationInfo().getJobSeeker().getName(), job.getApplicationInfo().getApplicationTime());
     }
 
     Predicate<AppliedJobApplication> queryCondition(String jobName, LocalDate from, LocalDate to) {
