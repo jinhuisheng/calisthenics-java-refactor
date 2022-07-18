@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 public class AppliedJobApplications {
     private final List<AppliedJobApplication> appliedApplications = new ArrayList<>();
 
-    void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws InvalidResumeException {
-        if (jobApplication.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeekerName)) {
+    void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime) throws InvalidResumeException {
+        if (job.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeeker.getName())) {
             throw new InvalidResumeException();
         }
-        AppliedJobApplication appliedJobApplication = new AppliedJobApplication(jobApplication.getJobName(), jobApplication.getApplicationTime(), jobApplication.getEmployerName(), jobApplication.getJobType(), new JobSeeker(jobSeekerName));
+        AppliedJobApplication appliedJobApplication = new AppliedJobApplication(applicationTime, jobSeeker, new PublishedJob(job, employer));
         appliedApplications.add(appliedJobApplication);
     }
 

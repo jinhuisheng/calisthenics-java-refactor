@@ -20,9 +20,9 @@ public class AppliedJobApplication {
         return applicationTime;
     }
 
-    public AppliedJobApplication(String jobName, LocalDate applicationTime, String employerName, JobType jobType, JobSeeker jobSeeker) {
+    public AppliedJobApplication(LocalDate applicationTime, JobSeeker jobSeeker, PublishedJob publishedJob) {
         this.applicationTime = applicationTime;
-        this.publishedJob = new PublishedJob(new Job(jobName, jobType), new Employer(employerName));
+        this.publishedJob = publishedJob;
         this.jobSeeker = jobSeeker;
     }
 

@@ -11,8 +11,8 @@ public class Application {
         jobs.save(jobSeeker, job);
     }
 
-    public void apply(String jobSeekerName, String resumeApplicantName, JobApplication jobApplication) throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobApplications.apply(jobSeekerName, resumeApplicantName, jobApplication);
+    public void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
+        jobApplications.apply(resumeApplicantName, jobSeeker, job, employer, applicationTime);
     }
 
     public void publish(Employer employer, Job job) throws NotSupportedJobTypeException {
