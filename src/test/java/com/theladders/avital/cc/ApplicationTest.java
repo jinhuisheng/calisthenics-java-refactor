@@ -129,8 +129,8 @@ public class ApplicationTest {
         List<String> applicants = application.findApplicants(seniorJavaDevJob, null, null);
 
         List<String> expected = new ArrayList<String>() {{
-            add("Lam");
             add("Jacky");
+            add("Lam");
         }};
 
         assertThat(applicants, is(expected));
@@ -288,8 +288,11 @@ public class ApplicationTest {
         application.apply(jobSeekerLam, lamResume, new JobApplication(seniorJavaDevJob, LocalDate.parse("1999-12-20"), employerAlibaba, JobType.JReq));
 
         String csv = application.export(LocalDate.parse("1999-12-20"), ExportType.csv);
-        String expected = "Employer,Job,Job Type,Applicants,Date" + "\n" + "Alibaba,Java开发,ATS,Ho,1999-12-20" + "\n" + "Alibaba,Java开发,ATS,Lam,1999-12-20" + "\n" + "Alibaba,高级Java开发,JReq,Lam,1999-12-20" + "\n" + "Alibaba,高级Java开发,JReq,Jacky,1999-12-20" + "\n";
-
+        String expected = "Employer,Job,Job Type,Applicants,Date" + "\n" +
+                "Alibaba,Java开发,ATS,Ho,1999-12-20" + "\n" +
+                "Alibaba,高级Java开发,JReq,Jacky,1999-12-20" + "\n" +
+                "Alibaba,Java开发,ATS,Lam,1999-12-20" + "\n" +
+                "Alibaba,高级Java开发,JReq,Lam,1999-12-20" + "\n";
         assertThat(csv, is(expected));
     }
 
@@ -335,6 +338,13 @@ public class ApplicationTest {
                 + "</tr>"
                 + "<tr>"
                 + "<td>Alibaba</td>"
+                + "<td>高级Java开发</td>"
+                + "<td>JReq</td>"
+                + "<td>Jacky</td>"
+                + "<td>1999-12-20</td>"
+                + "</tr>"
+                + "<tr>"
+                + "<td>Alibaba</td>"
                 + "<td>Java开发</td>"
                 + "<td>ATS</td>"
                 + "<td>Lam</td>"
@@ -345,13 +355,6 @@ public class ApplicationTest {
                 + "<td>高级Java开发</td>"
                 + "<td>JReq</td>"
                 + "<td>Lam</td>"
-                + "<td>1999-12-20</td>"
-                + "</tr>"
-                + "<tr>"
-                + "<td>Alibaba</td>"
-                + "<td>高级Java开发</td>"
-                + "<td>JReq</td>"
-                + "<td>Jacky</td>"
                 + "<td>1999-12-20</td>"
                 + "</tr>"
                 + "</tbody>"
