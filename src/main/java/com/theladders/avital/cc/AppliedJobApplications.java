@@ -17,13 +17,15 @@ public class AppliedJobApplications {
         appliedApplications.add(appliedJobApplication);
     }
 
-    List<AppliedJobApplication> getJobApplications(String jobSeekerName) {
-        return appliedApplications.stream().filter(temp_appliedApplication -> temp_appliedApplication.getJobSeeker().equals(new JobSeeker(jobSeekerName))).collect(Collectors.toList());
+    List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
+        return appliedApplications.stream()
+                .filter(jobApplication -> jobApplication.getJobSeeker().equals(jobSeeker))
+                .collect(Collectors.toList());
     }
 
-    int getSuccessfulApplications(String employerName, String jobName) {
+    int getSuccessfulApplications(Employer employer, String jobName) {
         return (int) appliedApplications.stream()
-                .filter(job -> job.getPublishedJob().getEmployer().getName().equals(employerName) && job.getPublishedJob().getJob().getJobName().equals(jobName))
+                .filter(job -> job.getPublishedJob().getEmployer().equals(employer) && job.getPublishedJob().getJob().getJobName().equals(jobName))
                 .count();
     }
 

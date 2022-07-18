@@ -11,7 +11,8 @@ public class Application {
         jobs.save(jobSeeker, job);
     }
 
-    public void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime) throws RequiresResumeForJReqJobException, InvalidResumeException {
+    public void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime)
+            throws RequiresResumeForJReqJobException, InvalidResumeException {
         jobApplications.apply(resumeApplicantName, jobSeeker, job, employer, applicationTime);
     }
 
@@ -27,8 +28,8 @@ public class Application {
         return jobs.getJobs(jobSeeker);
     }
 
-    public List<AppliedJobApplication> getAppliedJobs(String jobSeekerName) {
-        return jobApplications.getJobApplications(jobSeekerName);
+    public List<AppliedJobApplication> getAppliedJobs(JobSeeker jobSeeker) {
+        return jobApplications.getJobApplications(jobSeeker);
     }
 
     public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
@@ -42,8 +43,8 @@ public class Application {
         return jobApplications.exportHtml(applicationTime);
     }
 
-    public int getSuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getSuccessfulApplications(employerName, jobName);
+    public int getSuccessfulApplications(Employer employer, String jobName) {
+        return jobApplications.getSuccessfulApplications(employer, jobName);
     }
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {

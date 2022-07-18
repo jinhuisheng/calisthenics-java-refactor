@@ -85,7 +85,7 @@ public class ApplicationTest {
         application.publish(alibaba, juniorJob);
         application.apply(null, jobSeeker, juniorJob, alibaba, appliedTime);
         application.apply(null, jobSeeker, seniorJob, alibaba, appliedTime);
-        List<AppliedJobApplication> appliedJobs = application.getAppliedJobs(jobSeekerName);
+        List<AppliedJobApplication> appliedJobs = application.getAppliedJobs(jobSeeker);
         assertThat(appliedJobs, is(Arrays.asList(
                 new AppliedJobApplication(appliedTime, jobSeeker, new PublishedJob(juniorJob, alibaba)),
                 new AppliedJobApplication(appliedTime, jobSeeker, new PublishedJob(seniorJob, alibaba))
@@ -413,8 +413,8 @@ public class ApplicationTest {
         application.apply(null, ho, juniorJob, alibaba, applicationTime);
         application.apply(null, ho, juniorJob, tecent, applicationTime);
 
-        assertThat(application.getSuccessfulApplications(employerAlibaba, seniorJavaDevJob), is(2));
-        assertThat(application.getSuccessfulApplications(employerAlibaba, juniorJavaDevJob), is(1));
+        assertThat(application.getSuccessfulApplications(alibaba, seniorJavaDevJob), is(2));
+        assertThat(application.getSuccessfulApplications(alibaba, juniorJavaDevJob), is(1));
     }
 
     @Test
