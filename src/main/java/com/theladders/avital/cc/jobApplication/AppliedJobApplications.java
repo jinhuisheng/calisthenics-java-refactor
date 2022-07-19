@@ -1,4 +1,11 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.jobApplication;
+
+import com.theladders.avital.cc.employer.Employer;
+import com.theladders.avital.cc.InvalidResumeException;
+import com.theladders.avital.cc.jobseeker.JobSeeker;
+import com.theladders.avital.cc.job.PublishedJob;
+import com.theladders.avital.cc.job.Job;
+import com.theladders.avital.cc.job.JobType;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;

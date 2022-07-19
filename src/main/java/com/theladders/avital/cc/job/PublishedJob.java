@@ -1,6 +1,7 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.job;
 
 import com.google.common.base.Objects;
+import com.theladders.avital.cc.employer.Employer;
 
 public class PublishedJob {
     private final Job job;

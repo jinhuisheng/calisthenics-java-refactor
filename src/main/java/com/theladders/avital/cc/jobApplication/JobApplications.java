@@ -1,4 +1,11 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.jobApplication;
+
+import com.theladders.avital.cc.employer.Employer;
+import com.theladders.avital.cc.InvalidResumeException;
+import com.theladders.avital.cc.jobseeker.JobSeeker;
+import com.theladders.avital.cc.RequiresResumeForJReqJobException;
+import com.theladders.avital.cc.job.Job;
+import com.theladders.avital.cc.job.JobType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,7 +15,7 @@ public class JobApplications {
     final AppliedJobApplications appliedApplications = new AppliedJobApplications();
     private final List<FailedApplication> failedApplications = new ArrayList<>();
 
-    void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, String resumeApplicantName)
+    public void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, String resumeApplicantName)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (job.getJobType() == JobType.JReq && resumeApplicantName == null) {
             addFailedApplications(job, employer, applicationTime);
@@ -22,11 +29,11 @@ public class JobApplications {
         failedApplications.add(failedApplication);
     }
 
-    List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
+    public List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
         return appliedApplications.getJobApplications(jobSeeker);
     }
 
-    List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
+    public List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
         return appliedApplications.findApplicants(jobName, from, to);
     }
 
@@ -34,15 +41,15 @@ public class JobApplications {
         return appliedApplications.exportCsv(applicationTime);
     }
 
-    String exportHtml(LocalDate applicationTime) {
+    public String exportHtml(LocalDate applicationTime) {
         return appliedApplications.exportHtml(applicationTime);
     }
 
-    int getSuccessfulApplications(Employer employer, String jobName) {
+    public int getSuccessfulApplications(Employer employer, String jobName) {
         return appliedApplications.getSuccessfulApplications(employer, jobName);
     }
 
-    int getUnsuccessfulApplications(String employerName, String jobName) {
+    public int getUnsuccessfulApplications(String employerName, String jobName) {
         return (int) failedApplications.stream()
                 .filter(job -> job.getPublishedJob().getJob().getJobName().equals(jobName) && job.getPublishedJob().getEmployer().getName().equals(employerName))
                 .count();

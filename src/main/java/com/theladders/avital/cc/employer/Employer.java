@@ -1,4 +1,4 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.employer;
 
 import com.google.common.base.Objects;
 

@@ -1,6 +1,7 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.jobApplication;
 
 import com.google.common.base.Objects;
+import com.theladders.avital.cc.jobseeker.JobSeeker;
 
 import java.time.LocalDate;
 

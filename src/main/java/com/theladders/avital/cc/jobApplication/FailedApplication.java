@@ -1,4 +1,8 @@
-package com.theladders.avital.cc;
+package com.theladders.avital.cc.jobApplication;
+
+import com.theladders.avital.cc.employer.Employer;
+import com.theladders.avital.cc.job.PublishedJob;
+import com.theladders.avital.cc.job.Job;
 
 import java.time.LocalDate;
 
