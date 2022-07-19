@@ -37,7 +37,7 @@ public class AppliedJobApplications {
 
     int getSuccessfulApplications(Employer employer, String jobName) {
         return (int) appliedApplications.stream()
-                .filter(jobApplication -> jobApplication.getEmployer().equals(employer)
+                .filter(jobApplication -> jobApplication.isEmployer(employer)
                         && jobApplication.getJobName().equals(jobName))
                 .count();
     }

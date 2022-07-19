@@ -56,10 +56,6 @@ public class AppliedJobApplication {
         return publishedJob.getJobName();
     }
 
-    Employer getEmployer() {
-        return publishedJob.getEmployer();
-    }
-
     boolean isJobSeeker(JobSeeker jobSeeker) {
         return applicationInfo.getJobSeeker().equals(jobSeeker);
     }
@@ -74,5 +70,9 @@ public class AppliedJobApplication {
 
     public JobType getJobType() {
         return publishedJob.getJobType();
+    }
+
+    boolean isEmployer(Employer employer) {
+        return publishedJob.getEmployer().equals(employer);
     }
 }
