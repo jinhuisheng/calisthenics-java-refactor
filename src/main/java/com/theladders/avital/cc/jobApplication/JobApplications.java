@@ -2,6 +2,8 @@ package com.theladders.avital.cc.jobApplication;
 
 import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.InvalidResumeException;
+import com.theladders.avital.cc.jobApplication.exporter.JobApplicationCsvExporter;
+import com.theladders.avital.cc.jobApplication.exporter.JobApplicationHtmlExporter;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
 import com.theladders.avital.cc.RequiresResumeForJReqJobException;
 import com.theladders.avital.cc.job.Job;
@@ -38,11 +40,13 @@ public class JobApplications {
     }
 
     public String exportCsv(LocalDate applicationTime) {
-        return appliedApplications.exportCsv(applicationTime);
+        List<AppliedJobApplication> jobApplications = appliedApplications.getAppliedJobApplications(applicationTime);
+        return new JobApplicationCsvExporter().export(jobApplications);
     }
 
     public String exportHtml(LocalDate applicationTime) {
-        return appliedApplications.exportHtml(applicationTime);
+        List<AppliedJobApplication> jobApplications = appliedApplications.getAppliedJobApplications(applicationTime);
+        return new JobApplicationHtmlExporter().export(jobApplications);
     }
 
     public int getSuccessfulApplications(Employer employer, String jobName) {
@@ -51,7 +55,8 @@ public class JobApplications {
 
     public int getUnsuccessfulApplications(String employerName, String jobName) {
         return (int) failedApplications.stream()
-                .filter(job -> job.getPublishedJob().getJob().getJobName().equals(jobName) && job.getPublishedJob().getEmployer().getName().equals(employerName))
+                .filter(job -> job.getPublishedJob().getJob().getJobName().equals(jobName)
+                        && job.getPublishedJob().getEmployer().getName().equals(employerName))
                 .count();
     }
 }

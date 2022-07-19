@@ -5,7 +5,7 @@ import com.theladders.avital.cc.job.Job;
 import com.theladders.avital.cc.job.JobType;
 import com.theladders.avital.cc.job.PublishedJob;
 import com.theladders.avital.cc.jobApplication.AppliedJobApplication;
-import com.theladders.avital.cc.jobApplication.ExportType;
+import com.theladders.avital.cc.jobApplication.exporter.ExportType;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
 import org.junit.Before;
 import org.junit.Test;

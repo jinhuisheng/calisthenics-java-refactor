@@ -48,11 +48,11 @@ public class AppliedJobApplication {
         return !to.isBefore(this.applicationInfo.getApplicationTime());
     }
 
-    String getEmployerName() {
+    public String getEmployerName() {
         return publishedJob.getEmployerName();
     }
 
-    String getJobName() {
+    public String getJobName() {
         return publishedJob.getJobName();
     }
 
@@ -64,15 +64,15 @@ public class AppliedJobApplication {
         return applicationInfo.getJobSeeker().equals(jobSeeker);
     }
 
-    String getJobSeekerName() {
+    public String getJobSeekerName() {
         return applicationInfo.getJobSeekerName();
     }
 
-    LocalDate getApplicationTime() {
+    public LocalDate getApplicationTime() {
         return applicationInfo.getApplicationTime();
     }
 
-    JobType getJobType() {
+    public JobType getJobType() {
         return publishedJob.getJobType();
     }
 }

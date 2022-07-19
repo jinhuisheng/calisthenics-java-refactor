@@ -1,15 +1,16 @@
 package com.theladders.avital.cc.jobApplication;
 
-import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.InvalidResumeException;
-import com.theladders.avital.cc.jobseeker.JobSeeker;
-import com.theladders.avital.cc.job.PublishedJob;
+import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.job.Job;
 import com.theladders.avital.cc.job.JobType;
+import com.theladders.avital.cc.job.PublishedJob;
+import com.theladders.avital.cc.jobseeker.JobSeeker;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,8 @@ public class AppliedJobApplications {
 
     int getSuccessfulApplications(Employer employer, String jobName) {
         return (int) appliedApplications.stream()
-                .filter(jobApplication -> jobApplication.getEmployer().equals(employer) && jobApplication.getJobName().equals(jobName))
+                .filter(jobApplication -> jobApplication.getEmployer().equals(employer)
+                        && jobApplication.getJobName().equals(jobName))
                 .count();
     }
 
@@ -49,60 +51,19 @@ public class AppliedJobApplications {
                 .collect(Collectors.toList());
     }
 
-    String exportCsv(LocalDate applicationTime) {
-        String header = "Employer,Job,Job Type,Applicants,Date" + "\n";
-        StringBuilder result = new StringBuilder(header);
-        appliedApplications.stream()
+    public List<AppliedJobApplication> getAppliedJobApplications(LocalDate applicationTime) {
+        return appliedApplications.stream()
                 .filter(jobApplication -> jobApplication.getApplicationTime().equals(applicationTime))
-                .collect(Collectors.groupingBy(AppliedJobApplication::getJobSeekerName)).entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .flatMap(item -> item.getValue().stream())
-                .forEach(appliedJobApplication -> {
-                    String csvContentLine = getCsvContentLine(appliedJobApplication);
-                    result.append(csvContentLine);
-                });
-        return result.toString();
+                .sorted(Comparator.comparing(AppliedJobApplication::getJobSeekerName))
+                .collect(Collectors.toList());
     }
 
-    private String getCsvContentLine(AppliedJobApplication jobApplication) {
-        return MessageFormat.format("{0},{1},{2},{3},{4}\n",
-                jobApplication.getEmployerName(), jobApplication.getJobName(), jobApplication.getJobType().name(), jobApplication.getJobSeekerName(), jobApplication.getApplicationTime());
+    List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
+        Predicate<AppliedJobApplication> condition = getCondition(jobName, from, to);
+        return findApplicants(condition);
     }
 
-    String exportHtml(LocalDate applicationTime) {
-        StringBuilder result = new StringBuilder();
-        String header = "<!DOCTYPE html>"
-                + "<body>"
-                + "<table>"
-                + "<thead>"
-                + "<tr>"
-                + "<th>Employer</th>"
-                + "<th>Job</th>"
-                + "<th>Job Type</th>"
-                + "<th>Applicants</th>"
-                + "<th>Date</th>"
-                + "</tr>"
-                + "</thead>"
-                + "<tbody>";
-        appliedApplications.stream()
-                .filter(application -> application.getApplicationTime().equals(applicationTime))
-                .collect(Collectors.groupingBy(AppliedJobApplication::getJobSeekerName)).entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .flatMap(item -> item.getValue().stream())
-                .forEach(appliedJobApplication -> result.append(getHtmlContentLine(appliedJobApplication)));
-        String footer = "</tbody>"
-                + "</table>"
-                + "</body>"
-                + "</html>";
-        return header + result + footer;
-    }
-
-    private String getHtmlContentLine(AppliedJobApplication application) {
-        return MessageFormat.format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
-                application.getEmployerName(), application.getJobName(), application.getJobType().name(), application.getJobSeekerName(), application.getApplicationTime());
-    }
-
-    Predicate<AppliedJobApplication> queryCondition(String jobName, LocalDate from, LocalDate to) {
+    Predicate<AppliedJobApplication> getCondition(String jobName, LocalDate from, LocalDate to) {
         Predicate<AppliedJobApplication> predicate = job -> true;
         if (from != null) {
             predicate = predicate.and(job -> job.isEqualOrAfter(from));
@@ -114,10 +75,5 @@ public class AppliedJobApplications {
             predicate = predicate.and(job -> job.getJobName().equals(jobName));
         }
         return predicate;
-    }
-
-    List<String> findApplicants(String jobName, LocalDate from, LocalDate to) {
-        Predicate<AppliedJobApplication> condition = queryCondition(jobName, from, to);
-        return findApplicants(condition);
     }
 }
