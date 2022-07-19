@@ -1,5 +1,5 @@
 package com.theladders.avital.cc.job;
 
 public enum JobType {
-    JReq, RJeq, ATS
+    JReq, ATS
 }

@@ -60,13 +60,6 @@ public class ApplicationTest {
         assertThat(jobs, is(Arrays.asList(job)));
     }
 
-    @Test(expected = NotSupportedJobTypeException.class)
-    public void employers_should_not_be_able_to_publish_jobs_that_are_neither_ATS_nor_JReq() throws NotSupportedJobTypeException {
-        Employer alibaba = new Employer("Alibaba");
-        Job job = new Job("高级Java开发", JobType.RJeq);
-        application.publish(alibaba, job);
-    }
-
     @Test
     public void jobseekers_should_be_able_to_save_jobs_published_by_employers_for_later_review() throws NotSupportedJobTypeException {
         JobSeeker jobSeeker = new JobSeeker("Jacky");

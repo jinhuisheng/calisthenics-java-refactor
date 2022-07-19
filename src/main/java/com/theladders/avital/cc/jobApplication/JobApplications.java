@@ -40,12 +40,12 @@ public class JobApplications {
     }
 
     public String exportCsv(LocalDate applicationTime) {
-        List<AppliedJobApplication> jobApplications = appliedApplications.getAppliedJobApplications(applicationTime);
+        List<AppliedJobApplication> jobApplications = appliedApplications.getJobApplications(applicationTime);
         return new JobApplicationCsvExporter().export(jobApplications);
     }
 
     public String exportHtml(LocalDate applicationTime) {
-        List<AppliedJobApplication> jobApplications = appliedApplications.getAppliedJobApplications(applicationTime);
+        List<AppliedJobApplication> jobApplications = appliedApplications.getJobApplications(applicationTime);
         return new JobApplicationHtmlExporter().export(jobApplications);
     }
 

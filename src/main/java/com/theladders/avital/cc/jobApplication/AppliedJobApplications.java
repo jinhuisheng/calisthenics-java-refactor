@@ -51,7 +51,7 @@ public class AppliedJobApplications {
                 .collect(Collectors.toList());
     }
 
-    public List<AppliedJobApplication> getAppliedJobApplications(LocalDate applicationTime) {
+    public List<AppliedJobApplication> getJobApplications(LocalDate applicationTime) {
         return appliedApplications.stream()
                 .filter(jobApplication -> jobApplication.getApplicationTime().equals(applicationTime))
                 .sorted(Comparator.comparing(AppliedJobApplication::getJobSeekerName))
