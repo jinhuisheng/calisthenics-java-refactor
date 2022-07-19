@@ -10,10 +10,6 @@ public class AppliedJobApplication {
 
     private final ApplicationInfo applicationInfo;
 
-    public PublishedJob getPublishedJob() {
-        return publishedJob;
-    }
-
     public AppliedJobApplication(LocalDate applicationTime, JobSeeker jobSeeker, PublishedJob publishedJob) {
         this.publishedJob = publishedJob;
         this.applicationInfo = new ApplicationInfo(jobSeeker, applicationTime);
@@ -48,7 +44,31 @@ public class AppliedJobApplication {
         return !to.isBefore(this.applicationInfo.getApplicationTime());
     }
 
-    public ApplicationInfo getApplicationInfo() {
-        return applicationInfo;
+    String getEmployerName() {
+        return publishedJob.getEmployerName();
+    }
+
+    String getJobName() {
+        return publishedJob.getJobName();
+    }
+
+    Employer getEmployer() {
+        return publishedJob.getEmployer();
+    }
+
+    boolean isJobSeeker(JobSeeker jobSeeker) {
+        return applicationInfo.getJobSeeker().equals(jobSeeker);
+    }
+
+    String getJobSeekerName() {
+        return applicationInfo.getJobSeekerName();
+    }
+
+    LocalDate getApplicationTime() {
+        return applicationInfo.getApplicationTime();
+    }
+
+    JobType getJobType() {
+        return publishedJob.getJobType();
     }
 }

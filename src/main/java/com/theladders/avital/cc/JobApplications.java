@@ -8,13 +8,13 @@ public class JobApplications {
     final AppliedJobApplications appliedApplications = new AppliedJobApplications();
     private final List<FailedApplication> failedApplications = new ArrayList<>();
 
-    void apply(String resumeApplicantName, JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime)
+    void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, String resumeApplicantName)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (job.getJobType() == JobType.JReq && resumeApplicantName == null) {
             addFailedApplications(job, employer, applicationTime);
             throw new RequiresResumeForJReqJobException();
         }
-        appliedApplications.apply(resumeApplicantName, jobSeeker, job, employer, applicationTime);
+        appliedApplications.apply(employer, job, jobSeeker, applicationTime, resumeApplicantName);
     }
 
     private void addFailedApplications(Job job, Employer employer, LocalDate applicationTime) {

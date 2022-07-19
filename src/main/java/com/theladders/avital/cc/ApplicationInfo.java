@@ -11,6 +11,9 @@ public class ApplicationInfo {
     public JobSeeker getJobSeeker() {
         return jobSeeker;
     }
+    public String getJobSeekerName() {
+        return jobSeeker.getName();
+    }
 
     public LocalDate getApplicationTime() {
         return applicationTime;

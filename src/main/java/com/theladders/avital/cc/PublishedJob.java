@@ -31,9 +31,20 @@ public class PublishedJob {
     public Job getJob() {
         return job;
     }
+    public JobType getJobType() {
+        return job.getJobType();
+    }
+
+    public String getJobName() {
+        return job.getJobName();
+    }
 
     public Employer getEmployer() {
         return employer;
+    }
+
+    public String getEmployerName() {
+        return employer.getName();
     }
 
     public PublishedJob(Job job, Employer employer) {

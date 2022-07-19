@@ -13,9 +13,13 @@ public class Jobs {
         if (job.getJobType() != JobType.JReq && job.getJobType() != JobType.ATS) {
             throw new NotSupportedJobTypeException();
         }
-        List<Job> alreadyPublished_temp = publishedJobs.getOrDefault(employer, new ArrayList<>());
-        alreadyPublished_temp.add(job);
-        publishedJobs.put(employer, alreadyPublished_temp);
+        publishJob(job, employer);
+    }
+
+    private void publishJob(Job job, Employer employer) {
+        List<Job> employerPublishedJobs = publishedJobs.getOrDefault(employer, new ArrayList<>());
+        employerPublishedJobs.add(job);
+        publishedJobs.put(employer, employerPublishedJobs);
     }
 
     void save(JobSeeker jobSeeker, Job job) {
