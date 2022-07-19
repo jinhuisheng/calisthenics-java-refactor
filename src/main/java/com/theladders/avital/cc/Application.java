@@ -24,7 +24,7 @@ public class Application {
         jobApplications.apply(employer, job, jobSeeker, applicationTime, resumeApplicantName);
     }
 
-    public void publish(Employer employer, Job job) throws NotSupportedJobTypeException {
+    public void publish(Employer employer, Job job) {
         jobs.publish(job, employer);
     }
 

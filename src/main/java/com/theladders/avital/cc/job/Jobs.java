@@ -2,7 +2,6 @@ package com.theladders.avital.cc.job;
 
 import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
-import com.theladders.avital.cc.NotSupportedJobTypeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,14 +12,7 @@ public class Jobs {
 
     private final HashMap<Employer, List<Job>> publishedJobs = new HashMap<>();
 
-    public void publish(Job job, Employer employer) throws NotSupportedJobTypeException {
-        if (job.getJobType() != JobType.JReq && job.getJobType() != JobType.ATS) {
-            throw new NotSupportedJobTypeException();
-        }
-        publishJob(job, employer);
-    }
-
-    private void publishJob(Job job, Employer employer) {
+    public void publish(Job job, Employer employer) {
         List<Job> employerPublishedJobs = publishedJobs.getOrDefault(employer, new ArrayList<>());
         employerPublishedJobs.add(job);
         publishedJobs.put(employer, employerPublishedJobs);
