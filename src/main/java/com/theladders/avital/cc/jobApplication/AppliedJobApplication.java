@@ -41,11 +41,11 @@ public class AppliedJobApplication {
     }
 
     boolean isEqualOrAfter(LocalDate from) {
-        return !from.isAfter(this.applicationInfo.getApplicationTime());
+        return applicationInfo.isEqualOrAfter(from);
     }
 
     boolean isEqualOrBefore(LocalDate to) {
-        return !to.isBefore(this.applicationInfo.getApplicationTime());
+        return applicationInfo.isEqualOrBefore(to);
     }
 
     public String getEmployerName() {
@@ -54,10 +54,6 @@ public class AppliedJobApplication {
 
     public String getJobName() {
         return publishedJob.getJobName();
-    }
-
-    boolean isJobSeeker(JobSeeker jobSeeker) {
-        return applicationInfo.getJobSeeker().equals(jobSeeker);
     }
 
     public String getJobSeekerName() {
@@ -72,7 +68,20 @@ public class AppliedJobApplication {
         return publishedJob.getJobType();
     }
 
-    boolean isEmployer(Employer employer) {
+    boolean isMatched(JobSeeker jobSeeker) {
+        return applicationInfo.getJobSeeker().equals(jobSeeker);
+    }
+
+    boolean isMatched(Employer employer) {
         return publishedJob.getEmployer().equals(employer);
     }
+
+    boolean isMatched(String jobName) {
+        return publishedJob.getJobName().equals(jobName);
+    }
+
+    public String getJobTypeName() {
+        return publishedJob.getJobTypeName();
+    }
+
 }

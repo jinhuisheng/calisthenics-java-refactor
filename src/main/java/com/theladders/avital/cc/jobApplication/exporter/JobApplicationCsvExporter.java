@@ -24,9 +24,10 @@ public class JobApplicationCsvExporter {
         return MessageFormat.format("{0},{1},{2},{3},{4}\n",
                 jobApplication.getEmployerName(),
                 jobApplication.getJobName(),
-                jobApplication.getJobType().name(),
+                jobApplication.getJobTypeName(),
                 jobApplication.getJobSeekerName(),
                 jobApplication.getApplicationTime()
         );
     }
+
 }

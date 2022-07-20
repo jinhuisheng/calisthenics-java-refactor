@@ -31,14 +31,14 @@ public class AppliedJobApplications {
 
     List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
         return appliedApplications.stream()
-                .filter(jobApplication -> jobApplication.isJobSeeker(jobSeeker))
+                .filter(jobApplication -> jobApplication.isMatched(jobSeeker))
                 .collect(Collectors.toList());
     }
 
     int getSuccessfulApplications(Employer employer, String jobName) {
         return (int) appliedApplications.stream()
-                .filter(jobApplication -> jobApplication.isEmployer(employer)
-                        && jobApplication.getJobName().equals(jobName))
+                .filter(jobApplication -> jobApplication.isMatched(employer)
+                        && jobApplication.isMatched(jobName))
                 .count();
     }
 
@@ -72,7 +72,7 @@ public class AppliedJobApplications {
             predicate = predicate.and(job -> job.isEqualOrBefore(to));
         }
         if (jobName != null) {
-            predicate = predicate.and(job -> job.getJobName().equals(jobName));
+            predicate = predicate.and(job -> job.isMatched(jobName));
         }
         return predicate;
     }

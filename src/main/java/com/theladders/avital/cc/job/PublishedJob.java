@@ -32,6 +32,7 @@ public class PublishedJob {
     public Job getJob() {
         return job;
     }
+
     public JobType getJobType() {
         return job.getJobType();
     }
@@ -51,5 +52,9 @@ public class PublishedJob {
     public PublishedJob(Job job, Employer employer) {
         this.job = job;
         this.employer = employer;
+    }
+
+    public String getJobTypeName() {
+        return job.getJobType().name();
     }
 }

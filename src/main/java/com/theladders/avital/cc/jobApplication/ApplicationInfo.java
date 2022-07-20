@@ -12,6 +12,7 @@ public class ApplicationInfo {
     public JobSeeker getJobSeeker() {
         return jobSeeker;
     }
+
     public String getJobSeekerName() {
         return jobSeeker.getName();
     }
@@ -45,5 +46,13 @@ public class ApplicationInfo {
     @Override
     public int hashCode() {
         return Objects.hashCode(jobSeeker, applicationTime);
+    }
+
+    boolean isEqualOrAfter(LocalDate from) {
+        return !from.isAfter(getApplicationTime());
+    }
+
+    boolean isEqualOrBefore(LocalDate to) {
+        return !to.isBefore(getApplicationTime());
     }
 }
