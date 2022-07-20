@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class JobApplications {
-    final AppliedJobApplications appliedApplications = new AppliedJobApplications();
+    private final AppliedJobApplications appliedApplications = new AppliedJobApplications();
     private final FailedApplications failedApplications = new FailedApplications();
 
     public void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, Resume resume)
@@ -52,8 +52,8 @@ public class JobApplications {
         return new JobApplicationHtmlExporter().export(jobApplications);
     }
 
-    public int getSuccessfulApplications(Employer employer, String jobName) {
-        return appliedApplications.getSuccessfulApplications(employer, jobName);
+    public int getSuccessfulApplications(Employer employer, Job job) {
+        return appliedApplications.getSuccessfulApplications(employer, job);
     }
 
     public int getUnsuccessfulApplications(Employer employer, Job job) {

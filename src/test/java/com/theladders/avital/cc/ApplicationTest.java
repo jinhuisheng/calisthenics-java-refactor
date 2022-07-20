@@ -418,8 +418,8 @@ public class ApplicationTest {
         application.apply(alibaba, juniorJob, ho, applicationTime, createResumeBelongNoBody());
         application.apply(tecent, juniorJob, ho, applicationTime, createResumeBelongNoBody());
 
-        assertThat(application.getSuccessfulApplications(alibaba, seniorJavaDevJob), is(2));
-        assertThat(application.getSuccessfulApplications(alibaba, juniorJavaDevJob), is(1));
+        assertThat(application.getSuccessfulApplications(alibaba, seniorJob), is(2));
+        assertThat(application.getSuccessfulApplications(alibaba, juniorJob), is(1));
     }
 
     @Test

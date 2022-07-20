@@ -1,11 +1,9 @@
 package com.theladders.avital.cc.jobApplication;
 
-import com.theladders.avital.cc.InvalidResumeException;
 import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.job.Job;
 import com.theladders.avital.cc.job.PublishedJob;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
-import com.theladders.avital.cc.resume.Resume;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,10 +26,10 @@ public class AppliedJobApplications {
                 .collect(Collectors.toList());
     }
 
-    int getSuccessfulApplications(Employer employer, String jobName) {
+    int getSuccessfulApplications(Employer employer, Job job) {
         return (int) appliedApplications.stream()
                 .filter(jobApplication -> jobApplication.isMatched(employer)
-                        && jobApplication.isMatched(jobName))
+                        && jobApplication.isMatched(job))
                 .count();
     }
 

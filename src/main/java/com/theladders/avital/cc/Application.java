@@ -52,8 +52,8 @@ public class Application {
         return jobApplications.exportHtml(applicationTime);
     }
 
-    public int getSuccessfulApplications(Employer employer, String jobName) {
-        return jobApplications.getSuccessfulApplications(employer, jobName);
+    public int getSuccessfulApplications(Employer employer, Job job) {
+        return jobApplications.getSuccessfulApplications(employer, job);
     }
 
     public int getUnsuccessfulApplications(Employer employer, Job job) {
