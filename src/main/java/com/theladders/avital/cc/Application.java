@@ -33,7 +33,7 @@ public class Application {
         return jobs.getJobs(employer);
     }
 
-    public List<Job> getJobSeekSavedJobs(JobSeeker jobSeeker) {
+    public List<Job> getJobs(JobSeeker jobSeeker) {
         return jobs.getJobs(jobSeeker);
     }
 
@@ -56,8 +56,8 @@ public class Application {
         return jobApplications.getSuccessfulApplications(employer, jobName);
     }
 
-    public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return jobApplications.getUnsuccessfulApplications(employerName, jobName);
+    public int getUnsuccessfulApplications(Employer employer, Job job) {
+        return jobApplications.getUnsuccessfulApplications(employer, job);
     }
 
 }

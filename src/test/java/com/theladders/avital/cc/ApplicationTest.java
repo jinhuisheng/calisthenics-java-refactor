@@ -68,7 +68,7 @@ public class ApplicationTest {
         Employer alibaba = new Employer("Alibaba");
         application.publish(alibaba, job);
         application.save(jobSeeker, job);
-        List<Job> savedJobs = application.getJobSeekSavedJobs(jobSeeker);
+        List<Job> savedJobs = application.getJobs(jobSeeker);
         assertThat(savedJobs, is(Arrays.asList(job)));
     }
 
@@ -445,7 +445,7 @@ public class ApplicationTest {
         }
         application.apply(alibaba, juniorJob, lam, applicationTime, createResumeBelongNoBody());
 
-        assertThat(application.getUnsuccessfulApplications(employerAlibaba, seniorJavaDevJob), is(1));
-        assertThat(application.getUnsuccessfulApplications(employerAlibaba, juniorJavaDevJob), is(0));
+        assertThat(application.getUnsuccessfulApplications(alibaba, seniorJob), is(1));
+        assertThat(application.getUnsuccessfulApplications(alibaba, juniorJob), is(0));
     }
 }

@@ -57,4 +57,5 @@ public class PublishedJob {
     public String getJobTypeName() {
         return job.getJobType().name();
     }
+
 }

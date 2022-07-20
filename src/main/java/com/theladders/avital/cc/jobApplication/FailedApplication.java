@@ -17,8 +17,11 @@ public class FailedApplication {
         this.publishedJob = new PublishedJob(job, employer);
     }
 
-    public PublishedJob getPublishedJob() {
-        return publishedJob;
+    boolean isMatched(Job job) {
+        return publishedJob.getJob().equals(job);
     }
 
+    boolean isMatched(Employer employer) {
+        return publishedJob.getEmployer().equals(employer);
+    }
 }

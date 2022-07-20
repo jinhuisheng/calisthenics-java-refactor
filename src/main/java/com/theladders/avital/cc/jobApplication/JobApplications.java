@@ -11,12 +11,11 @@ import com.theladders.avital.cc.job.JobType;
 import com.theladders.avital.cc.resume.Resume;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JobApplications {
     final AppliedJobApplications appliedApplications = new AppliedJobApplications();
-    private final List<FailedApplication> failedApplications = new ArrayList<>();
+    private final FailedApplications failedApplications = new FailedApplications();
 
     public void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, Resume resume)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
@@ -27,17 +26,12 @@ public class JobApplications {
     private void checkResumeValid(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, Resume resume)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
         if (job.isMatched(JobType.JReq) && resume.isExist()) {
-            addFailedApplications(job, employer, applicationTime);
+            failedApplications.add(job, employer, applicationTime);
             throw new RequiresResumeForJReqJobException();
         }
         if (job.isMatched(JobType.JReq) && !resume.isMatched(jobSeeker.getName())) {
             throw new InvalidResumeException();
         }
-    }
-
-    private void addFailedApplications(Job job, Employer employer, LocalDate applicationTime) {
-        FailedApplication failedApplication = new FailedApplication(applicationTime, job, employer);
-        failedApplications.add(failedApplication);
     }
 
     public List<AppliedJobApplication> getJobApplications(JobSeeker jobSeeker) {
@@ -62,10 +56,7 @@ public class JobApplications {
         return appliedApplications.getSuccessfulApplications(employer, jobName);
     }
 
-    public int getUnsuccessfulApplications(String employerName, String jobName) {
-        return (int) failedApplications.stream()
-                .filter(job -> job.getPublishedJob().getJob().getJobName().equals(jobName)
-                        && job.getPublishedJob().getEmployer().getName().equals(employerName))
-                .count();
+    public int getUnsuccessfulApplications(Employer employer, Job job) {
+        return failedApplications.getUnsuccessfulApplications(employer, job);
     }
 }
