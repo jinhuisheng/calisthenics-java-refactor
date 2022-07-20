@@ -7,6 +7,7 @@ import com.theladders.avital.cc.jobApplication.AppliedJobApplication;
 import com.theladders.avital.cc.jobApplication.exporter.ExportType;
 import com.theladders.avital.cc.jobApplication.JobApplications;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
+import com.theladders.avital.cc.resume.Resume;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -19,9 +20,9 @@ public class Application {
         jobs.save(jobSeeker, job);
     }
 
-    public void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, String resumeApplicantName)
+    public void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, Resume resume)
             throws RequiresResumeForJReqJobException, InvalidResumeException {
-        jobApplications.apply(employer, job, jobSeeker, applicationTime, resumeApplicantName);
+        jobApplications.apply(employer, job, jobSeeker, applicationTime, resume);
     }
 
     public void publish(Employer employer, Job job) {

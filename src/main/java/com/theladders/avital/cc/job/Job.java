@@ -25,7 +25,7 @@ public class Job {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Job job = (Job) o;
-        return Objects.equal(jobName, job.jobName) && jobType == job.jobType;
+        return Objects.equal(jobName, job.jobName) && isMatched(job.jobType);
     }
 
     @Override
@@ -39,5 +39,9 @@ public class Job {
                 "jobName='" + jobName + '\'' +
                 ", jobType=" + jobType +
                 '}';
+    }
+
+    public boolean isMatched(JobType jobType) {
+        return this.jobType == jobType;
     }
 }

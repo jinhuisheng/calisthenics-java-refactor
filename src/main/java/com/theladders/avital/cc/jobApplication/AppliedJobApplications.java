@@ -3,9 +3,9 @@ package com.theladders.avital.cc.jobApplication;
 import com.theladders.avital.cc.InvalidResumeException;
 import com.theladders.avital.cc.employer.Employer;
 import com.theladders.avital.cc.job.Job;
-import com.theladders.avital.cc.job.JobType;
 import com.theladders.avital.cc.job.PublishedJob;
 import com.theladders.avital.cc.jobseeker.JobSeeker;
+import com.theladders.avital.cc.resume.Resume;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,14 +17,7 @@ import java.util.stream.Collectors;
 public class AppliedJobApplications {
     private final List<AppliedJobApplication> appliedApplications = new ArrayList<>();
 
-    void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime, String resumeApplicantName) throws InvalidResumeException {
-        if (job.getJobType() == JobType.JReq && !resumeApplicantName.equals(jobSeeker.getName())) {
-            throw new InvalidResumeException();
-        }
-        addApplication(jobSeeker, job, employer, applicationTime);
-    }
-
-    private void addApplication(JobSeeker jobSeeker, Job job, Employer employer, LocalDate applicationTime) {
+    void apply(Employer employer, Job job, JobSeeker jobSeeker, LocalDate applicationTime) {
         AppliedJobApplication appliedJobApplication = new AppliedJobApplication(applicationTime, jobSeeker, new PublishedJob(job, employer));
         appliedApplications.add(appliedJobApplication);
     }
